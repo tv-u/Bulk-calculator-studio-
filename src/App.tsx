@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { HashRouter, Route, Routes, useParams } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 import { StudioProvider } from './context/StudioContext';
 import { AppShell } from './components/layout/AppShell';
 import { isSupportedLanguage } from './i18n/languages';
@@ -84,7 +84,7 @@ class StudioErrorBoundary extends React.Component<
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <StudioProvider>
         <AppShell>
           <StudioErrorBoundary>
@@ -142,6 +142,6 @@ export default function App() {
           </StudioErrorBoundary>
         </AppShell>
       </StudioProvider>
-    </HashRouter>
+    </BrowserRouter>
   );
 }

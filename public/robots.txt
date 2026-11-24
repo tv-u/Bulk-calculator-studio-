@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /api/
 
-Sitemap: /sitemap.xml
+Sitemap: https://bulk-calculator-studio.pages.dev/sitemap.xml
