@@ -1,0 +1,6 @@
+{
+  "name": "BULK CALCULATOR STUDIO",
+  "description": "One Studio. Unlimited Calculations. Real Results. A next-generation computational ecosystem featuring 58+ verified calculators, Bulk Calculation Studio, Custom Builder, Visual Workflow Builder, Math & Finance Labs, and Data Analysis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,196 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Light Control Studio Tokens */
+  --ambient-brightness: 1;
+  --panel-brightness: 1;
+  --bg-brightness: 1;
+  --glass-opacity: 0.72;
+  --glass-blur: 14px;
+  --glow-intensity: 0.45;
+  --border-light: 0.16;
+  --accent-intensity: 1;
+  --gradient-intensity: 0.85;
+  --neon-intensity: 0.4;
+  --transition-ms: 200ms;
+
+  /* Active Page Color Identity */
+  --page-accent: #3b82f6;
+  --page-accent-2: #8b5cf6;
+  --page-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+
+  /* Surface defaults (Light theme) */
+  --surface-canvas: #f4f7fb;
+  --surface-panel: rgba(255, 255, 255, 0.82);
+  --surface-panel-solid: #ffffff;
+  --surface-border: rgba(15, 23, 42, 0.12);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --density-pad: 1.25rem;
+}
+
+.dark {
+  --surface-canvas: #070b16;
+  --surface-panel: rgba(15, 23, 42, 0.72);
+  --surface-panel-solid: #0f172a;
+  --surface-border: rgba(255, 255, 255, 0.12);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+}
+
+[data-density="compact"] {
+  --density-pad: 0.85rem;
+}
+[data-density="comfortable"] {
+  --density-pad: 1.25rem;
+}
+[data-density="spacious"] {
+  --density-pad: 1.75rem;
+}
+
+html {
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--surface-canvas);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono, .tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Liquid Glass System (7 Styles) */
+.liquid-glass {
+  background-color: var(--surface-panel);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.35);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.35);
+  border: 1px solid var(--surface-border);
+  box-shadow:
+    0 8px 32px rgba(2, 6, 23, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, calc(var(--border-light) * 0.9));
+  transition:
+    transform var(--transition-ms) cubic-bezier(0.16, 1, 0.3, 1),
+    border-color var(--transition-ms) ease,
+    box-shadow var(--transition-ms) ease;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .liquid-glass {
+    background-color: var(--surface-panel-solid);
+  }
+}
+
+.glass-style-crystal .liquid-glass {
+  background-color: color-mix(in srgb, var(--surface-panel-solid) calc(var(--glass-opacity) * 78%), transparent);
+  box-shadow:
+    0 12px 36px rgba(15, 23, 42, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32);
+}
+
+.glass-style-frosted .liquid-glass {
+  backdrop-filter: blur(calc(var(--glass-blur) * 1.4)) saturate(1.1);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.4)) saturate(1.1);
+  background-color: color-mix(in srgb, var(--surface-panel-solid) 86%, transparent);
+}
+
+.glass-style-aurora .liquid-glass {
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--page-accent) 12%, transparent),
+    color-mix(in srgb, var(--page-accent-2) 10%, transparent)
+  );
+}
+
+.glass-style-neon .liquid-glass {
+  border-color: color-mix(in srgb, var(--page-accent) 45%, transparent);
+  box-shadow:
+    0 0 calc(24px * var(--neon-intensity)) color-mix(in srgb, var(--page-accent) 28%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--page-accent-2) 35%, transparent);
+}
+
+.glass-style-midnight .liquid-glass {
+  background-color: rgba(8, 12, 26, 0.88);
+  border-color: rgba(148, 163, 184, 0.18);
+}
+
+.glass-style-softlight .liquid-glass {
+  background-color: rgba(255, 255, 255, 0.88);
+  border-color: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+
+.glass-style-transparent .liquid-glass {
+  background-color: color-mix(in srgb, var(--surface-panel-solid) 48%, transparent);
+}
+
+.high-contrast .liquid-glass {
+  background-color: var(--surface-panel-solid) !important;
+  backdrop-filter: none !important;
+  border-width: 2px;
+  border-color: currentColor;
+}
+
+.reduced-effects *,
+.reduced-effects *::before,
+.reduced-effects *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Premium 3D Card & Button Depth System */
+.card-3d {
+  box-shadow:
+    0 12px 28px -8px rgba(2, 6, 23, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+    0 2px 0 rgba(255, 255, 255, 0.14) inset;
+  transform: translateY(0);
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.card-3d:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 36px -10px color-mix(in srgb, var(--page-accent) 26%, rgba(2, 6, 23, 0.38)),
+    0 0 0 1px color-mix(in srgb, var(--page-accent) 32%, transparent) inset;
+}
+
+.btn-3d {
+  box-shadow:
+    0 6px 16px -4px color-mix(in srgb, var(--page-accent) 45%, rgba(2, 6, 23, 0.35)),
+    0 1px 0 rgba(255, 255, 255, 0.25) inset;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+}
+
+.btn-3d:hover {
+  transform: translateY(-1px);
+}
+
+.btn-3d:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px -2px rgba(2, 6, 23, 0.4);
+}
+

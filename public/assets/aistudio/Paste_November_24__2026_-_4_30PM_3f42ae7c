@@ -1,0 +1,1454 @@
+अब BULK CALCULATOR STUDIO का Final Master Prompt तैयार करते हैं। इसमें तुम्हारा चयन लागू रहेगा:
+
+* पूरे 2,500 calculators — नाम और क्रम सुरक्षित।
+
+* सभी 50 भाषाएँ — Hindi और English सहित।
+
+* हर calculator का अलग URL और SEO पेज।
+
+* Smart Instant Search — खोजते ही सही calculator खुले।
+
+* Advanced 3D UI और हर category की अलग रंग-थीम।
+
+* PDF Download, Offline Mode, Calculation History और Calculator Comparison।
+
+* Advanced Admin Panel और Bulk Import।
+
+* AdSense integration और भविष्य के monetization विकल्प।
+
+* Mobile, Tablet और Laptop पर पूरी तरह Responsive।
+
+* वास्तविक गणना, automated testing और production deployment।
+
+एक महत्वपूर्ण बदलाव: वेबसाइट में 2,500 calculators के लिए 2,500 अलग-अलग calculation engines की नकल नहीं होगी। एक मजबूत reusable engine, अलग calculator definitions, category-specific modules और automated tests इस्तेमाल होंगे। इससे वेबसाइट तेज, कम खर्चीली और maintainable रहेगी।
+
+### BULK CALCULATOR STUDIO — FINAL MASTER PROMPT v2.0
+
+नीचे वाला prompt AI Developer को देना है। इसे इस तरह बनाया है कि AI केवल homepage या demo बनाकर काम पूरा घोषित न करे। उसे वास्तविक calculation engines, सभी pages, SEO, testing, admin और deployment पर काम करना होगा।
+
+# BULK CALCULATOR STUDIO
+## ULTIMATE MASTER BUILD PROMPT v2.0
+### 2,500 Calculators | 50 Languages | Advanced SEO | 3D UI | Smart Search | PDF | Offline | Monetization
+
+---
+
+# 1. YOUR ROLE AND MISSION
+
+Act as a complete senior engineering team consisting of:
+
+- Principal Full-Stack Architect
+- Senior Next.js Developer
+- Mathematics and Scientific Computing Engineer
+- Financial Calculation Specialist
+- Database Architect
+- SEO Technical Architect
+- UI/UX Designer
+- Accessibility Engineer
+- Performance Engineer
+- Security Engineer
+- QA Automation Engineer
+- Localization Specialist
+
+Build a production-ready global calculator platform named:
+
+**BULK CALCULATOR STUDIO**
+
+Primary objective:
+
+Build exactly 2,500 individually registered calculator entries, each with its own dedicated URL, calculator interface, calculation logic, metadata, category, documentation, and test coverage.
+
+Support 50 languages.
+
+The platform must be genuinely functional, not a visual prototype.
+
+Do not claim a feature is complete until its implementation and tests are verified.
+
+# 2. NON-NEGOTIABLE RULES
+
+1. Preserve all 2,500 supplied calculator names and their original numbering.
+2. Do not silently remove, rename, or replace any catalog entry.
+3. Every calculator must have a unique stable ID and URL.
+4. Every calculator must perform its advertised function correctly.
+5. Never display fabricated calculations or results.
+6. Never use random numbers as calculated results.
+7. Never use placeholder forms for unfinished calculators.
+8. Never display fake success messages.
+9. Never publish unfinished calculators as working calculators.
+10. Every calculation must have documented formulas, units, assumptions, and tests.
+11. Validate all inputs and handle invalid values gracefully.
+12. Support mobile, tablet, laptop, and desktop.
+13. All pages must be indexable where appropriate.
+14. Avoid unnecessary dependencies and expensive external services.
+15. Do not compromise calculation accuracy for design or performance.
+
+# 3. REQUIRED TECHNOLOGY ARCHITECTURE
+
+Use a compatible, stable production stack.
+
+Frontend:
+- Next.js App Router
+- React
+- TypeScript with strict mode
+- Tailwind CSS
+- shadcn/ui
+- Framer Motion
+- Lucide icons
+
+Application architecture:
+- React Server Components by default
+- Client Components only where interactivity is required
+- Reusable calculator rendering engine
+- Modular calculation functions
+- Category-specific calculator components
+- Dynamic route generation
+- Lazy-loaded heavy calculation modules
+
+State and validation:
+- Zustand only where shared state is necessary
+- Zod for input validation
+- React Hook Form for complex forms where useful
+
+Calculation libraries:
+- decimal.js for financial precision
+- math.js for mathematical expressions where appropriate
+- Dedicated numerical algorithms for scientific calculations
+- Date-fns or an equivalent date library
+- Explicit unit-conversion registry
+
+Database:
+- PostgreSQL
+- Prisma ORM
+- Database migrations
+- Seed scripts
+- Proper indexes
+- Automated backups
+
+Search:
+- Lightweight local search index for smaller deployments
+- Typesense as an optional advanced search service
+- Search abstraction so the provider can be changed later
+
+Caching:
+- Next.js caching and ISR
+- CDN caching
+- Appropriate cache invalidation
+- Avoid unnecessary Redis usage
+
+Internationalization:
+- next-intl or an equivalent maintained solution
+- 50 translation dictionaries
+- RTL support
+- Locale-specific number, date and currency formatting
+
+Testing:
+- Vitest
+- React Testing Library
+- Playwright
+- Automated calculation regression tests
+- Accessibility testing
+
+Deployment:
+- Vercel-compatible deployment
+- Cloudflare CDN and DNS compatibility
+- Environment variable configuration
+- CI/CD with GitHub Actions
+
+Do not force every external service into the project. Keep optional services replaceable and provide a free or low-cost deployment configuration.
+
+# 4. THE 2,500 CALCULATOR ENGINE
+
+Build one powerful reusable calculation platform.
+
+Do not create 2,500 copies of the same source code.
+
+Use:
+
+Calculator Registry
+    ↓
+Calculator Metadata
+    ↓
+Input Schema
+    ↓
+Calculation Engine
+    ↓
+Validation Engine
+    ↓
+Results Engine
+    ↓
+Explanation and Formula
+    ↓
+SEO and Translation
+    ↓
+Automated Tests
+
+Every calculator registry entry must contain:
+
+- Unique ID
+- Original calculator name
+- URL slug
+- Category
+- Subcategory
+- Description
+- Input schema
+- Output schema
+- Formula
+- Calculation function
+- Unit configuration
+- Default values where appropriate
+- Validation rules
+- Error messages
+- Worked example
+- Test cases
+- SEO metadata
+- Translation keys
+- Related calculators
+- Publication status
+- Version number
+
+Supported calculator types:
+
+1. Financial calculations
+2. Mathematical calculations
+3. Scientific calculations
+4. Engineering calculations
+5. Statistical calculations
+6. Health calculations
+7. Date and time calculations
+8. Unit conversions
+9. Business calculations
+10. Estimation tools
+11. Data and programming tools
+12. Live information tools
+
+Important classification:
+
+Not every supplied item is a mathematical calculator. Items such as DNS Lookup, WHOIS Lookup, and SSL Certificate Checker require external data sources.
+
+Classify these separately as live tools.
+
+Do not present a live-data lookup as a mathematical calculation.
+
+If an external data source is unavailable, clearly show that the service is unavailable rather than inventing data.
+
+# 5. CALCULATION ACCURACY SYSTEM
+
+This is the highest-priority engineering requirement.
+
+For every calculator:
+
+- Identify the accepted mathematical or domain-specific formula.
+- Document all input variables.
+- Document measurement units.
+- Define the expected output.
+- Handle zero, negative, null, infinity, and invalid inputs appropriately.
+- Handle rounding according to the calculation type.
+- Avoid floating-point errors in financial calculations.
+- Provide independent reference test cases.
+- Test boundary conditions.
+- Test invalid inputs.
+- Test unit conversions.
+- Test different supported input combinations.
+
+Create a calculation documentation page or section for each calculator.
+
+Show:
+- Formula
+- Explanation
+- Example calculation
+- Assumptions
+- Limitations
+- Result interpretation
+
+For calculators with multiple accepted methods, let the user select the method.
+
+Never use a single generic formula for calculators that have different mathematical meanings.
+
+Create an automated calculation test registry.
+
+Required release condition:
+
+A calculator cannot be marked as production-ready until its calculation tests pass.
+
+# 6. EXACT 2,500 URL ARCHITECTURE
+
+Primary domain:
+
+https://bulkcalculatorstudio.com
+
+URL pattern:
+
+/{language}/{category}/{calculator-slug}
+
+Examples:
+
+/en/finance/emi-calculator
+/hi/finance/emi-calculator
+/en/health/bmi-calculator
+/hi/health/bmi-calculator
+/en/mathematics/percentage-calculator
+
+Rules:
+
+- Every catalog item gets a stable unique ID.
+- Every published calculator gets its own canonical URL.
+- Generate static pages for supported calculator-language combinations where practical.
+- Use dynamic rendering only where necessary.
+- Do not generate unnecessary duplicate routes.
+- Preserve stable URLs when calculator metadata changes.
+- Use redirects when URLs are intentionally changed.
+- Never create redirect loops.
+
+For identical or duplicate concepts in the supplied catalog:
+
+Preserve their original catalog IDs and names.
+
+Perform a duplicate audit.
+
+If two entries are genuinely identical, share the same verified calculation implementation. Keep distinct routes only when they serve a meaningful separate search intent and have unique content. Otherwise use a documented canonical or redirect strategy.
+
+Do not generate duplicate SEO pages with copied content merely to reach a page count.
+
+# 7. SMART INSTANT SEARCH
+
+Create a premium search experience visible on every page.
+
+Features:
+
+- Instant search
+- Prefix matching
+- Fuzzy search
+- Typo tolerance
+- Synonym matching
+- Category matching
+- Search by calculator name
+- Search by formula or keyword
+- Multilingual search
+- Hindi and English transliteration support
+- Search suggestions
+- Recent searches
+- Popular searches
+- Keyboard navigation
+- Mobile search overlay
+- Search history controls
+
+Keyboard shortcuts:
+
+/ = Open search
+Arrow Up = Previous result
+Arrow Down = Next result
+Enter = Open selected calculator
+Escape = Close search
+
+Most important requirement:
+
+When a visitor searches EMI Calculator, open the exact EMI Calculator page.
+
+Do not open a category page or generic search-results page when an exact match exists.
+
+Search ranking:
+
+1. Exact calculator name
+2. Exact synonym
+3. Exact keyword
+4. Prefix match
+5. Fuzzy match
+6. Related calculator
+
+Create a search index containing all active calculators.
+
+Target fast responses, with actual latency measured under realistic conditions.
+
+# 8. PREMIUM 3D UI DESIGN SYSTEM
+
+Design a visually impressive global calculator platform.
+
+Design direction:
+
+- Modern 3D UI
+- Glassmorphism
+- Soft neumorphism
+- Liquid glass surfaces
+- Premium gradient cards
+- Smooth motion
+- Depth and layered shadows
+- Subtle animated backgrounds
+- High-quality icons
+- Clean typography
+- Professional data visualization
+
+Do not make every page look identical.
+
+Use different category-specific visual identities.
+
+Category themes:
+
+Finance: Blue / Indigo
+Health: Pink / Rose
+Mathematics: Purple / Violet
+Engineering: Orange / Amber
+Construction: Yellow / Lime
+Business: Teal / Cyan
+Education: Green / Emerald
+Science: Cyan / Sky
+Technology: Slate / Gray
+Daily Life: Red / Pink
+Automotive: Sky / Blue
+Agriculture: Lime / Green
+Legal: Amber / Orange
+Sports: Emerald / Teal
+Food: Rose / Pink
+
+Create additional accessible palettes for remaining categories.
+
+Every color combination must pass readable contrast requirements.
+
+3D interaction:
+
+- Hover elevation
+- Active press animation
+- Soft glow
+- Layered shadows
+- Smooth transitions
+- Reduced-motion support
+- Touch-friendly controls
+
+Do not use excessive animations that reduce performance.
+
+# 9. CALCULATOR PAGE DESIGN
+
+Every calculator page must contain:
+
+1. Breadcrumb navigation
+2. Calculator title
+3. Short introduction
+4. Input form
+5. Input descriptions
+6. Unit selectors where required
+7. Calculate button
+8. Reset button
+9. Clear validation messages
+10. Results dashboard
+11. Formula explanation
+12. Worked example
+13. Calculation history
+14. PDF export
+15. Copy result
+16. Share result
+17. Related calculators
+18. Frequently asked questions
+19. Disclaimer where applicable
+20. Feedback option
+
+Results must update only from real calculations.
+
+Use appropriate charts, tables and visualizations where they genuinely help users understand results.
+
+Support keyboard navigation and screen readers.
+
+# 10. ADVANCED USER FEATURES
+
+Implement the following features.
+
+## A. Calculation History
+
+- Save recent calculations locally.
+- Display previous inputs and results.
+- Reopen a previous calculation.
+- Rename saved calculations.
+- Delete individual records.
+- Clear all history.
+- Export history.
+
+Do not collect sensitive calculation data without explicit consent.
+
+## B. PDF Export
+
+Every calculator should support professional PDF export.
+
+PDF must include:
+
+- BULK CALCULATOR STUDIO branding
+- Calculator name
+- Calculation date
+- Input values
+- Calculated results
+- Formula
+- Explanation
+- Units
+- Assumptions
+- Disclaimer where applicable
+
+PDF requirements:
+
+- Download directly to the device.
+- Mobile-friendly layout.
+- Proper Unicode font support.
+- Hindi text rendering.
+- Arabic and RTL rendering.
+- Multi-page support.
+- Printable layout.
+
+Never export fabricated or stale results.
+
+## C. Share Results
+
+Support:
+
+- Copy result
+- Web Share API
+- WhatsApp sharing
+- Shareable calculator URLs
+- Optional shareable result links
+
+Do not expose private calculation history through public links.
+
+## D. Calculator Comparison
+
+Allow users to:
+
+- Compare two calculators where comparison is meaningful.
+- Compare loan scenarios.
+- Compare investment scenarios.
+- Compare unit conversions.
+- Compare input and output values.
+- View differences in a chart or table.
+
+Do not compare unrelated calculation types.
+
+## E. Offline Mode
+
+Implement a Progressive Web App.
+
+Features:
+
+- Installable application
+- Offline homepage shell
+- Offline category pages where cached
+- Offline access to recently visited calculators
+- Offline calculation engine for supported tools
+- Background updates when internet returns
+- Clear offline status
+
+Do not cache sensitive personal information or private admin pages.
+
+Show an understandable offline indicator.
+
+## F. Favorites and Collections
+
+- Add calculators to favorites.
+- Remove favorites.
+- Create user collections.
+- Reorder saved calculators.
+- Store preferences locally unless an authenticated account is used.
+
+## G. Accessibility
+
+- WCAG 2.2 AA target
+- Keyboard navigation
+- Screen-reader support
+- Proper labels
+- Focus indicators
+- High contrast support
+- Reduced motion
+- Accessible error messages
+
+# 11. 50-LANGUAGE INTERNATIONALIZATION
+
+Implement all 50 languages:
+
+1. English
+2. Hindi
+3. Bengali
+4. Tamil
+5. Telugu
+6. Marathi
+7. Gujarati
+8. Kannada
+9. Malayalam
+10. Punjabi
+11. Urdu
+12. Spanish
+13. French
+14. German
+15. Italian
+16. Portuguese
+17. Russian
+18. Arabic
+19. Chinese Simplified
+20. Chinese Traditional
+21. Japanese
+22. Korean
+23. Indonesian
+24. Vietnamese
+25. Thai
+26. Turkish
+27. Dutch
+28. Polish
+29. Swedish
+30. Norwegian
+31. Danish
+32. Finnish
+33. Greek
+34. Hebrew
+35. Czech
+36. Romanian
+37. Hungarian
+38. Ukrainian
+39. Persian
+40. Swahili
+41. Filipino
+42. Malay
+43. Nepali
+44. Sinhala
+45. Burmese
+46. Khmer
+47. Amharic
+48. Yoruba
+49. Zulu
+50. Icelandic
+
+Localization requirements:
+
+- Full interface translation.
+- Calculator names.
+- Calculator descriptions.
+- Form labels.
+- Validation messages.
+- Results.
+- Formula explanations.
+- FAQ.
+- SEO titles.
+- SEO descriptions.
+- Navigation.
+- PDF documents.
+- Error messages.
+
+Support:
+
+- RTL for Arabic, Urdu, Hebrew and Persian.
+- Locale-aware number formatting.
+- Locale-aware dates.
+- Currency formatting.
+- Language selector.
+- Browser language detection.
+- Manual language selection.
+
+Translation quality:
+
+Do not automatically mark machine-generated translations as verified.
+
+Use a translation completeness report.
+
+Maintain language-specific content files:
+
+messages/en.json
+messages/hi.json
+messages/bn.json
+...
+messages/is.json
+
+A missing translation must have a controlled fallback and must not produce broken pages.
+
+# 12. ADVANCED SEO ARCHITECTURE
+
+SEO must be implemented individually for each calculator.
+
+Every calculator-language page should have:
+
+- Unique title
+- Unique meta description
+- Canonical URL
+- OpenGraph metadata
+- Twitter Card metadata
+- Breadcrumb navigation
+- Relevant structured data
+- Hreflang annotations for genuinely available equivalent language pages
+- Indexability controls
+- Sitemap inclusion where eligible
+
+Structured data:
+
+- WebApplication or appropriate SoftwareApplication schema
+- BreadcrumbList
+- FAQPage only where eligible and compliant with current Google guidelines
+
+Do not add fake reviews, fake ratings or unsupported structured data.
+
+Create:
+
+- XML sitemaps
+- Language-specific sitemaps
+- Sitemap index
+- robots.txt
+- Canonical management
+- Redirect management
+- 404 page
+- 410 handling where needed
+- Google Search Console verification instructions
+- Bing Webmaster verification instructions
+
+SEO content must be genuinely useful.
+
+Avoid:
+
+- Keyword stuffing
+- Copied descriptions
+- Automatically generated meaningless FAQs
+- Thin pages
+- Duplicate indexing
+- False claims about accuracy
+
+Include internal linking between relevant calculators.
+
+# 13. ADVANCED ADMIN PANEL
+
+Admin URL:
+
+/admin
+
+Protect all administrative functions with secure authentication.
+
+Admin modules:
+
+A. Dashboard
+- Total calculators
+- Published calculators
+- Pending calculators
+- Unpublished calculators
+- Categories
+- Languages
+- Calculation test status
+- Search analytics
+- Page analytics
+
+B. Calculator Management
+- Create
+- Edit
+- Preview
+- Publish
+- Unpublish
+- Archive
+- Restore
+- Duplicate
+- Bulk edit
+
+C. Bulk Import
+- CSV import
+- JSON import
+- Bulk validation
+- Duplicate detection
+- Formula verification status
+- Import error report
+- Import preview
+- Rollback
+
+D. Translation Management
+- Language completion
+- Missing translations
+- Translation approval
+- SEO translation
+- Bulk export
+
+E. SEO Management
+- Title editor
+- Description editor
+- Canonical editor
+- Index/noindex controls
+- Redirect manager
+- Sitemap status
+
+F. Calculation Testing
+- Test cases
+- Expected outputs
+- Actual outputs
+- Failure reports
+- Regression history
+
+G. Analytics
+- Popular calculators
+- Search queries
+- Search failures
+- User engagement
+- PDF export counts
+- Category performance
+
+Admin security:
+- Role-based access
+- Strong password hashing
+- Secure sessions
+- CSRF protection where applicable
+- Rate limiting
+- Audit logs
+- Login attempt protection
+
+Never expose admin API credentials to the browser.
+
+# 14. MONETIZATION AND ADVERTISING
+
+Implement monetization-ready architecture.
+
+Primary advertising:
+
+Google AdSense integration.
+
+Requirements:
+
+- Responsive ad placements
+- Lazy-loaded ad scripts
+- Reserved ad dimensions
+- Minimal layout shift
+- Mobile-safe placements
+- Consent and privacy compliance
+- ads.txt support
+- Ad placement controls from admin
+- Ad enable/disable switches
+
+Placement options:
+
+- Header advertising slot
+- Homepage advertising slot
+- Category page slot
+- Calculator content slot
+- Sidebar slot on desktop
+- Footer advertising slot
+
+Rules:
+
+- Never obstruct calculator inputs.
+- Never cover result buttons.
+- Never create accidental clicks.
+- Never force popunders.
+- Never show misleading download buttons.
+- Do not load unnecessary ad scripts.
+- Respect applicable advertising policies.
+
+AdSense approval and earnings are not guaranteed.
+
+Keep advertising providers replaceable.
+
+# 15. FINANCIAL, MEDICAL AND LEGAL SAFETY
+
+Financial calculators:
+
+- Display currency and jurisdiction.
+- Identify applicable tax year.
+- Document interest assumptions.
+- Distinguish estimates from official amounts.
+- Update rules through versioned configuration.
+- Never claim guaranteed investment returns.
+- Include relevant financial disclaimers.
+
+Indian financial calculators must support appropriate Indian conventions, including INR, lakh/crore formatting, and jurisdiction-specific configuration.
+
+Medical calculators:
+
+- Clearly identify clinical reference standards.
+- Display required patient input units.
+- Include limitations and warnings.
+- Require appropriate clinical review.
+- Never provide an unsupported diagnosis.
+- Never imply that a result replaces a doctor.
+- Require expert validation before publication.
+
+Medication dosage and clinical decision-support calculators must remain unpublished until reviewed and approved by qualified professionals.
+
+Engineering and construction calculators:
+
+- Document applicable standards.
+- Display assumptions.
+- Identify design limitations.
+- Do not claim structural safety certification.
+
+# 16. DATABASE DESIGN
+
+Create a scalable relational database.
+
+Core tables:
+
+Calculator
+- id
+- catalogNumber
+- slug
+- name
+- categoryId
+- subcategoryId
+- description
+- calculatorType
+- inputSchema
+- outputSchema
+- formula
+- formulaVersion
+- keywords
+- synonyms
+- componentKey
+- isActive
+- publicationStatus
+- validationStatus
+- createdAt
+- updatedAt
+
+CalculatorTranslation
+- id
+- calculatorId
+- language
+- translatedName
+- translatedDescription
+- translatedSeoTitle
+- translatedSeoDescription
+- translatedFaq
+- translationStatus
+
+Category
+- id
+- slug
+- name
+- icon
+- theme
+- sortOrder
+
+CalculationTest
+- id
+- calculatorId
+- testName
+- input
+- expectedOutput
+- tolerance
+- status
+
+SearchLog
+- id
+- query
+- language
+- calculatorId
+- resultCount
+- createdAt
+
+AdminUser
+- id
+- email
+- passwordHash
+- role
+- createdAt
+
+Add appropriate constraints, relations, indexes and migration scripts.
+
+# 17. PERFORMANCE ENGINEERING
+
+Performance is a priority.
+
+Targets under defined production test conditions:
+
+- Lighthouse Performance: 95+
+- Accessibility: 95+
+- Best Practices: 95+
+- SEO: 95+
+- LCP: under 2.5 seconds
+- INP: under 200 ms
+- CLS: under 0.1
+
+Aim for faster results where practical.
+
+Requirements:
+
+- Static generation where suitable
+- Server-side rendering where needed
+- Selective ISR
+- Dynamic imports
+- Lazy-loaded calculation modules
+- Tree shaking
+- Code splitting
+- Image optimization
+- Font optimization
+- Minimal JavaScript
+- Optimized database queries
+- CDN caching
+- Search index optimization
+- No unnecessary client-side dependencies
+
+Do not load all 2,500 calculation modules on the homepage.
+
+Do not load all 50 translation dictionaries into every page.
+
+Load only the required calculator module and selected locale.
+
+Performance must be measured, not merely claimed.
+
+# 18. SECURITY
+
+Implement:
+
+- Input sanitization
+- Zod validation
+- Secure authentication
+- Password hashing
+- Rate limiting
+- Security headers
+- Content Security Policy
+- HSTS
+- HTTPS
+- Secure cookies
+- Database access controls
+- Environment secret management
+- Dependency vulnerability checks
+- Admin audit logs
+- Abuse prevention
+
+Never place private API keys in client-side code.
+
+Use Cloudflare Turnstile only where appropriate and without obstructing normal calculator usage.
+
+# 19. ANALYTICS AND MONITORING
+
+Implement privacy-conscious analytics.
+
+Track:
+
+- Page visits
+- Calculator usage
+- Search queries
+- Search result clicks
+- Failed searches
+- PDF downloads
+- Language usage
+- Popular categories
+- Calculation errors
+
+Provide:
+
+- Error monitoring
+- Performance monitoring
+- Uptime monitoring
+- Database health
+- Deployment health
+- Search service health
+
+Allow analytics to be disabled or configured according to applicable privacy requirements.
+
+# 20. EXACT CATALOG IMPORT REQUIREMENT
+
+Use the complete 2,500-item catalog supplied in the original prompt.
+
+The catalog consists of:
+
+- 50 parts
+- 50 numbered entries per part
+- 2,500 original catalog entries
+
+Preserve every supplied name and original catalog number.
+
+Before implementation, generate:
+
+1. catalog-master.json
+2. catalog-audit.csv
+3. category-index.json
+4. duplicate-report.csv
+5. missing-definition-report.csv
+6. calculator-test-plan.json
+
+Audit:
+
+- Missing IDs
+- Duplicate names
+- Similar concepts
+- Incorrect category assignments
+- Live tools versus calculators
+- Ambiguous formulas
+- Jurisdiction-dependent calculations
+- Medical and engineering safety requirements
+
+Never silently modify the original catalog.
+
+Every item must receive a documented implementation status:
+
+- pending
+- in_development
+- testing
+- validated
+- published
+- restricted
+- unpublished
+
+A catalog item must not be marked validated without passing its tests.
+
+# 21. TESTING AND QUALITY ASSURANCE
+
+Test all major systems.
+
+Calculator testing:
+- Known reference values
+- Boundary values
+- Invalid inputs
+- Decimal precision
+- Rounding
+- Unit conversion
+- Different calculation methods
+
+Application testing:
+- Search accuracy
+- Direct URLs
+- Navigation
+- PDF generation
+- Offline behavior
+- History
+- Favorites
+- Sharing
+- Language switching
+- RTL rendering
+- Admin authentication
+- Bulk import
+
+SEO testing:
+- Metadata
+- Canonical URLs
+- Hreflang
+- Sitemaps
+- Robots
+- Structured data
+- Broken links
+- Redirects
+
+Device testing:
+- Android phones
+- iPhones
+- Tablets
+- Windows laptops
+- Desktop browsers
+
+Never mark a test as passed without actually executing it.
+
+# 22. DEVELOPMENT PHASES
+
+PHASE 1 — FOUNDATION
+
+- Create project structure.
+- Configure stack.
+- Create database schema.
+- Build design system.
+- Build calculator registry.
+- Build validation engine.
+- Build reusable calculator renderer.
+- Implement EMI Calculator completely.
+
+PHASE 2 — CORE CALCULATORS
+
+- Implement the first 100 calculators.
+- Create reference tests.
+- Verify URLs.
+- Verify calculator templates.
+- Complete core search.
+
+PHASE 3 — CATALOG EXPANSION
+
+- Import all 2,500 entries.
+- Implement calculation modules by category.
+- Generate missing-definition reports.
+- Run automated testing.
+- Publish only validated calculators.
+
+PHASE 4 — INTERNATIONALIZATION
+
+- Implement all 50 languages.
+- Create translation files.
+- Implement RTL.
+- Complete translation QA.
+- Generate eligible localized routes.
+
+PHASE 5 — ADVANCED FEATURES
+
+- PDF generation
+- Offline PWA
+- Calculation history
+- Favorites
+- Comparison
+- Sharing
+- Advanced search
+- Admin bulk tools
+
+PHASE 6 — SEO AND MONETIZATION
+
+- Complete technical SEO.
+- Generate sitemaps.
+- Configure advertising.
+- Configure analytics.
+- Configure monitoring.
+
+PHASE 7 — PRODUCTION RELEASE
+
+- Full automated tests.
+- Security review.
+- Performance review.
+- Mobile review.
+- Deployment.
+- Production smoke tests.
+- Backup verification.
+
+Do not sacrifice correctness to meet an arbitrary deadline.
+
+# 23. REQUIRED PROJECT STRUCTURE
+
+Create a clean modular architecture similar to:
+
+src/
+  app/
+    [locale]/
+      [category]/
+        [slug]/
+    admin/
+    api/
+  components/
+    calculator/
+    search/
+    layout/
+    ui/
+    charts/
+  calculators/
+    finance/
+    mathematics/
+    health/
+    engineering/
+    construction/
+    science/
+    business/
+    education/
+    technology/
+    daily-life/
+    other/
+  engine/
+    calculation/
+    validation/
+    units/
+    precision/
+    formatting/
+  registry/
+  database/
+  i18n/
+  seo/
+  pdf/
+  offline/
+  analytics/
+  security/
+  testing/
+
+prisma/
+  schema.prisma
+  seed.ts
+
+messages/
+  en.json
+  hi.json
+  ...all remaining languages
+
+public/
+  icons/
+  images/
+  manifest.json
+  robots.txt
+
+tests/
+  unit/
+  integration/
+  e2e/
+  calculator-reference/
+
+scripts/
+  catalog-audit.ts
+  generate-sitemaps.ts
+  validate-calculators.ts
+  validate-translations.ts
+  performance-check.ts
+
+Adapt this structure when necessary, but maintain clear module boundaries.
+
+# 24. REQUIRED FINAL DELIVERABLES
+
+Deliver:
+
+1. Complete working source code.
+2. Exactly 2,500 catalog records.
+3. All 50 language dictionaries.
+4. Calculator registry.
+5. Verified calculation modules.
+6. Calculation reference tests.
+7. Database schema.
+8. Database migrations.
+9. Seed scripts.
+10. Search engine.
+11. Individual calculator URLs.
+12. SEO metadata system.
+13. XML sitemap generator.
+14. Admin panel.
+15. CSV/JSON bulk importer.
+16. PDF generation.
+17. Offline PWA.
+18. History and favorites.
+19. Comparison tools.
+20. Sharing system.
+21. Monetization integration.
+22. Analytics and monitoring.
+23. Security configuration.
+24. Responsive design system.
+25. Automated tests.
+26. GitHub Actions workflow.
+27. README.
+28. .env.example.
+29. Deployment documentation.
+30. Production test report.
+
+Also provide:
+
+- Number of implemented calculators.
+- Number of validated calculators.
+- Number of published calculators.
+- Number of pending calculators.
+- Number of completed translations.
+- Number of failed tests.
+- Known limitations.
+- Actual Lighthouse reports.
+- Deployment URL.
+
+Never fabricate a report or screenshot.
+
+# 25. DEFINITION OF DONE
+
+The project is not complete merely because the homepage works.
+
+Final completion requires:
+
+[ ] 2,500 original catalog entries imported.
+[ ] All original names and IDs preserved.
+[ ] All eligible calculator pages generated.
+[ ] Every published calculator genuinely works.
+[ ] Calculation reference tests pass.
+[ ] All 50 language systems implemented.
+[ ] RTL verified.
+[ ] Search opens exact calculator URLs.
+[ ] PDF downloads work.
+[ ] Offline calculations work for supported tools.
+[ ] History and favorites work.
+[ ] Comparison works.
+[ ] Admin panel works.
+[ ] Bulk import works.
+[ ] SEO validation passes.
+[ ] Sitemaps generate correctly.
+[ ] No critical security vulnerabilities.
+[ ] Mobile and desktop layouts verified.
+[ ] Production build succeeds.
+[ ] Deployment smoke tests pass.
+
+Maintain a clear distinction between catalog completion and validated production readiness.
+
+# 26. EXECUTION INSTRUCTIONS
+
+Start by inspecting the available development environment.
+
+If a repository already exists:
+
+- Inspect its structure.
+- Preserve useful existing functionality.
+- Do not destroy working features.
+- Create a backup before destructive migrations.
+- Use version control.
+- Keep changes incremental and recoverable.
+
+If a new repository is required:
+
+- Create the project.
+- Configure the stack.
+- Set up Git.
+- Create the initial documentation.
+
+Then execute:
+
+STEP 1: Build the complete application foundation.
+
+STEP 2: Build EMI Calculator as the reference implementation.
+
+STEP 3: Verify EMI calculations against independent test cases.
+
+STEP 4: Complete the reusable calculator page and engine.
+
+STEP 5: Build and test the first 100 calculators.
+
+STEP 6: Expand the remaining catalog through category-based modules.
+
+STEP 7: Implement all 50 languages.
+
+STEP 8: Complete all advanced features.
+
+STEP 9: Perform automated testing and security review.
+
+STEP 10: Deploy and verify the actual production website.
+
+Do not stop after generating a plan.
+
+Do not stop after creating the homepage.
+
+Do not stop after building the EMI demo.
+
+Continue implementation until the available execution environment reaches a real, documented milestone.
+
+If context, time or tool limitations prevent completing everything in one session, save all work, update the progress report, and clearly identify the exact next task. Never claim that unfinished work is complete.
+
+# FINAL COMMAND
+
+BUILD BULK CALCULATOR STUDIO AS A REAL, GLOBAL, PRODUCTION-GRADE CALCULATOR PLATFORM.
+
+PRIORITIZE CALCULATION ACCURACY, UNIQUE SEARCHABLE PAGES, PERFORMANCE, SEO, ACCESSIBILITY, SECURITY AND MAINTAINABILITY.
+
+THE FINAL PRODUCT MUST BE A GENUINELY FUNCTIONAL PLATFORM, NOT A STATIC DESIGN DEMO.
+
+START NOW.
+
+### 6\. एक जरूरी काम: 2,500 Calculator की Original List जोड़ना
+
+ऊपर के Master Prompt में catalog preservation का नियम है। अब तुम्हारे पुराने prompt के सभी 50 Parts (Calculator #1–2500) को इसके ठीक बाद Appendix A — Immutable Calculator Catalog के रूप में जोड़ना है।
+
+इससे AI:
+
+* किसी calculator का नाम नहीं बदलेगा।
+
+* कोई नंबर नहीं हटाएगा।
+
+* सभी 2,500 entries का audit करेगा।
+
+* Duplicate calculations को साझा engine से चलाएगा।
+
+* हर calculator का implementation status बताएगा।
+
+भाषाओं में सुधार: तुम्हारी मूल सूची में 49 भाषाएँ थीं। मैंने Icelandic जोड़कर 50 पूरी की हैं।
+
+### 7\. इसे किस AI Developer को देना बेहतर होगा?
+
+मेरी प्राथमिकता:
+
+* Claude Code — बड़े codebase और multi-file development के लिए।
+
+* Cursor — लगातार development, debugging और testing के लिए।
+
+* Replit — browser-based development और deployment के लिए।
+
+* Bolt / Lovable — शुरुआती UI और prototype के लिए।
+
+मेरी सलाह: इसे GitHub repository से जुड़े Claude Code या Cursor में इस्तेमाल करना। एक बार में 2,500 calculators का पूरा production-ready implementation होने की उम्मीद मत रखना; AI को चरणों में build, test और deploy करना होगा।
+
+### Final Project Goals
+
+### 2,500
+
+Catalog entries
+
+### 50
+
+Languages
+
+### PDF
+
+Export system
+
+### PWA
+
+Offline support
+
+मुख्य लक्ष्य: एक तेज, विश्वसनीय, SEO-friendly और monetization-ready global calculator platform।
+
+मेरी सबसे जरूरी सलाह: पहले EMI का calculation engine और उसका पूरा page सही बनवाना, फिर उसी architecture से बाकी calculators तैयार करवाना। इससे 2,500 अधूरे calculators बनाने के बजाय एक वास्तविक और मजबूत वेबसाइट बनेगी।
