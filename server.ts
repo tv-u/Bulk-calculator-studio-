@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import dns from 'node:dns';
 import fs from 'node:fs';
+import http from 'node:http';
 import net from 'node:net';
 import path from 'node:path';
 import tls from 'node:tls';
@@ -1030,11 +1031,38 @@ ${availableCalculators
     });
   });
 
+  const httpServer = http.createServer(app);
+
   // Vite middleware in development, static dist in production
   if (!IS_PROD) {
+    const enableHmr = process.env.ENABLE_HMR === 'true' && process.env.DISABLE_HMR !== 'true';
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      plugins: enableHmr
+        ? []
+        : [
+            {
+              name: 'disable-hmr-client-ws',
+              enforce: 'post',
+              transform(code: string, id: string) {
+                const cleanId = id.split('?')[0].replace(/\\/g, '/');
+                if (cleanId.endsWith('/vite/dist/client/client.mjs')) {
+                  return code
+                    .replaceAll(
+                      'await wsTransport.connect(handlers);',
+                      'return; /* HMR WebSocket disabled */'
+                    )
+                    .replace('wsTransport.send(data);', '/* HMR WebSocket disabled */');
+                }
+                return null;
+              },
+            },
+          ],
+      server: {
+        middlewareMode: true,
+        hmr: enableHmr ? { server: httpServer } : false,
+        ws: enableHmr ? { server: httpServer } : false,
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
@@ -1046,7 +1074,7 @@ ${availableCalculators
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`BULK CALCULATOR STUDIO server listening on http://localhost:${PORT}`);
   });
 }
