@@ -2,7 +2,7 @@
   "name": "bulk-calculator-studio",
   "private": true,
   "version": "2.0.0",
-  "homepage": "https://tv-u.github.io/Bulk-calculator-studio-/",
+  "homepage": "https://bulk-calculator-studio.pages.dev/",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
