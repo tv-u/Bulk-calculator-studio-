@@ -5,6 +5,7 @@ import {
   BarChart3,
   Bot,
   Calculator,
+  Clock,
   Coins,
   FileSpreadsheet,
   FlaskConical,
@@ -44,9 +45,10 @@ const FEATURED_SLUGS = [
 ];
 
 export const HomePage: React.FC = () => {
-  const { unpublishedCalculators, customCalculators, language, t } = useStudio();
+  const { unpublishedCalculators, customCalculators, history, language, t } = useStudio();
   const published = getPublishedCatalogEntries(unpublishedCalculators);
   const featured = FEATURED_SLUGS.map((slug) => CATALOG_2500.find((c) => c.slug === slug)).filter(Boolean);
+  const recentTools = history.slice(0, 4);
 
   return (
     <div className="space-y-8">
@@ -56,15 +58,15 @@ export const HomePage: React.FC = () => {
         hreflangPath=""
       />
 
-      {/* Hero Section with Large Smart Search */}
+      {/* Hero Command Center with Instant 2,500-Calculator Smart Search */}
       <CosmicEntrance>
         <AuroraFlow className="liquid-glass card-3d p-6 sm:p-10">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3.5 py-1 text-xs font-semibold text-blue-600 dark:text-blue-300">
+            <div className="inline-flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-300">
               <Globe className="h-3.5 w-3.5" />
               <span>{t('hero.badge', `${published.length.toLocaleString()} Verified Calculators · 50 Languages`)}</span>
             </div>
-            <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl text-balance">
+            <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl text-balance">
               BULK CALCULATOR STUDIO
             </h1>
             <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-600 dark:text-slate-300 sm:text-base">
@@ -88,13 +90,53 @@ export const HomePage: React.FC = () => {
               <Link to="/bulk-calculator">
                 <MagneticButton variant="secondary">
                   <FileSpreadsheet className="h-4 w-4" />
-                  {t('hero.openBulk', 'Open Bulk CSV Studio')}
+                  {t('hero.openBulk', 'Open Bulk Studio')}
                 </MagneticButton>
               </Link>
             </div>
           </div>
         </AuroraFlow>
       </CosmicEntrance>
+
+      {/* Quick Resume Bar when user has calculation history */}
+      {recentTools.length > 0 && (
+        <section aria-labelledby="recent-heading">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 id="recent-heading" className="flex items-center gap-2 font-display text-base font-bold">
+              <Clock className="h-4 w-4 text-blue-500" />
+              <span>Quick Resume Recent Calculations</span>
+            </h2>
+            <Link to="/history" className="text-xs font-semibold text-blue-600 hover:underline dark:text-blue-400">
+              Full History →
+            </Link>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {recentTools.map((h) => {
+              const meta = CATALOG_2500.find((c) => c.slug === h.calculatorId || c.id === h.calculatorId);
+              const route = meta
+                ? `/${language}/${meta.category}/${meta.slug}`
+                : `/calculators/${h.calculatorId}`;
+              return (
+                <Link
+                  key={h.id}
+                  to={route}
+                  className="liquid-glass card-3d rounded-xl p-3.5 hover:border-blue-500/40"
+                >
+                  <div className="truncate text-xs font-semibold text-slate-900 dark:text-slate-100">
+                    {h.calculatorName}
+                  </div>
+                  <div className="mt-1 flex items-center justify-between text-xs">
+                    <span className="truncate text-slate-500 dark:text-slate-400">{h.primaryLabel}</span>
+                    <span className="font-mono font-bold tabular-nums text-blue-600 dark:text-blue-400">
+                      {h.primaryValue}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Essential Calculators */}
       <section aria-labelledby="popular-heading">
@@ -115,7 +157,7 @@ export const HomePage: React.FC = () => {
               <Link
                 key={calc.id}
                 to={`/${language}/${calc.category}/${calc.slug || calc.id}`}
-                className="liquid-glass card-3d rounded-2xl p-4 hover:border-blue-500/40"
+                className="liquid-glass card-3d overflow-hidden rounded-2xl p-4 hover:border-blue-500/40"
               >
                 <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                   <span>{calc.categoryLabel}</span>

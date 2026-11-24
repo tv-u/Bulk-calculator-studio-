@@ -17,7 +17,7 @@ describe('50-Language Internationalization & RTL Suite', () => {
     expect(SUPPORTED_LANGUAGES.find((l) => l.code === 'hi')?.dir).toBe('ltr');
   });
 
-  it('has valid JSON message bundles for all 50 languages in public/messages/', () => {
+  it('has valid JSON message bundles with native translations for all 50 languages in public/messages/', () => {
     const dir = path.resolve(process.cwd(), 'public/messages');
     for (const lang of SUPPORTED_LANGUAGES) {
       const file = path.join(dir, `${lang.code}.json`);
@@ -26,6 +26,22 @@ describe('50-Language Internationalization & RTL Suite', () => {
       expect(parsed['brand.name']).toBe('BULK CALCULATOR STUDIO');
       expect(typeof parsed['nav.home']).toBe('string');
       expect(parsed['nav.home'].length).toBeGreaterThan(0);
+      expect(typeof parsed['calc.back']).toBe('string');
+      expect(typeof parsed['calc.close']).toBe('string');
+      expect(typeof parsed['calc.downloadPdf']).toBe('string');
+      if (lang.code !== 'en') {
+        expect(parsed['calc.back']).not.toBe('Back');
+        expect(parsed['calc.close']).not.toBe('Close');
+      }
+    }
+
+    const auditFile = path.resolve(process.cwd(), 'public/reports/i18n-audit.json');
+    const audit = JSON.parse(fs.readFileSync(auditFile, 'utf8')) as {
+      languages: Array<{ code: string; localizedKeys: number }>;
+    };
+    expect(audit.languages.length).toBe(50);
+    for (const entry of audit.languages) {
+      expect(entry.localizedKeys).toBeGreaterThanOrEqual(8);
     }
   });
 });

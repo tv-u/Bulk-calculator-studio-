@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import {
   AlertTriangle,
+  ArrowRight,
   Bookmark,
   Check,
-  ChevronRight,
   Copy,
   Download,
   FileDown,
@@ -15,12 +15,14 @@ import {
   Share2,
 } from 'lucide-react';
 import {
+  CATALOG_2500,
   CATALOG_BY_SLUG,
   resolveCalculatorBySlugAsync,
   resolveCatalogEntryMeta,
 } from '../engine/catalogResolver';
 import type { CalculatorDefinition, CalculatorResult } from '../engine/calculatorTypes';
 import { evaluateSafeFormula } from '../engine/safeMath';
+import { resolveCategoryTheme } from '../theme/pageThemes';
 import { useStudio } from '../context/StudioContext';
 import { DocumentHead } from '../components/seo/DocumentHead';
 import {
@@ -31,6 +33,7 @@ import {
 } from '../components/motion/MotionLibrary';
 import { SimpleBarChart } from '../components/charts/SimpleChart';
 import { MonetagAdSlot } from '../components/ads/MonetagAdSlot';
+import { QuickCalculatorBar } from '../components/calculators/QuickCalculatorBar';
 
 interface LiveToolResponse {
   available: boolean;
@@ -64,7 +67,6 @@ export const CalculatorDetailPage: React.FC = () => {
   const [calc, setCalc] = useState<CalculatorDefinition | undefined>(undefined);
   const [loadingCalc, setLoadingCalc] = useState<boolean>(true);
 
-  // Also check server-imported calculators if not in static 2,500 catalog
   useEffect(() => {
     let cancelled = false;
     if (!slug) {
@@ -104,6 +106,7 @@ export const CalculatorDetailPage: React.FC = () => {
           };
         },
       });
+      setLoadingCalc(false);
       return;
     }
 
@@ -170,6 +173,14 @@ export const CalculatorDetailPage: React.FC = () => {
     }
   }, [calc, isHidden, values, locale, currency]);
 
+  const categoryPeers = useMemo(() => {
+    if (!calc) return [];
+    const currentSlug = calc.slug || calc.id;
+    return CATALOG_2500.filter(
+      (c) => c.category === calc.category && c.slug !== currentSlug && !unpublishedCalculators.includes(c.slug)
+    ).slice(0, 6);
+  }, [calc, unpublishedCalculators]);
+
   if (loadingCalc && !calc) {
     return (
       <LiquidGlassReveal className="p-8 text-center">
@@ -197,6 +208,7 @@ export const CalculatorDetailPage: React.FC = () => {
     );
   }
 
+  const categoryTheme = resolveCategoryTheme(calc.category);
   const isFav = favorites.includes(calc.id);
   const related = (calc.relatedIds || [])
     .map((id) => CATALOG_BY_SLUG.get(id) || resolveCatalogEntryMeta(id))
@@ -369,14 +381,27 @@ export const CalculatorDetailPage: React.FC = () => {
       ? 'Engineering Safety Notice: Apply statutory safety factors and local building/electrical codes before construction or wiring.'
       : undefined);
 
-  const schemaJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: calc.name,
-    applicationCategory: 'UtilitiesApplication',
-    operatingSystem: 'Any',
-    description: calc.shortDescription,
-  };
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const schemaJsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: calc.name,
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Any',
+      description: calc.shortDescription,
+      url: `${origin}/${activeLang}/${calc.category}/${calc.slug || calc.id}`,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
+        { '@type': 'ListItem', position: 2, name: calc.categoryLabel, item: `${origin}/${activeLang}/${calc.category}` },
+        { '@type': 'ListItem', position: 3, name: calc.name, item: `${origin}/${activeLang}/${calc.category}/${calc.slug || calc.id}` },
+      ],
+    },
+  ];
 
   return (
     <div className="space-y-6">
@@ -387,31 +412,27 @@ export const CalculatorDetailPage: React.FC = () => {
         jsonLd={schemaJsonLd}
       />
 
-      {/* Breadcrumbs */}
-      <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-        <Link to="/" className="hover:underline">{t('nav.home', 'Home')}</Link>
-        <ChevronRight className="h-3.5 w-3.5" />
-        <Link to="/calculators" className="hover:underline">{t('nav.calculators', 'Calculators')}</Link>
-        <ChevronRight className="h-3.5 w-3.5" />
-        <Link to={`/${activeLang}/${calc.category}`} className="hover:underline">{calc.categoryLabel}</Link>
-        <ChevronRight className="h-3.5 w-3.5" />
-        <span className="font-medium text-slate-900 dark:text-slate-100">{calc.name}</span>
-      </nav>
+      {/* Sticky Back, Close (x), Prev/Next & Instant 2,500-Calculator Switcher */}
+      <QuickCalculatorBar calculator={calc} activeLang={activeLang} />
 
+      {/* Category-Themed Precision Header */}
       <CosmicEntrance>
-        <LiquidGlassReveal className="card-3d p-6">
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+        <LiquidGlassReveal className="card-3d overflow-hidden p-0">
+          <div className="h-1.5 w-full" style={{ background: categoryTheme.gradient }} />
+          <div className="flex flex-col justify-between gap-4 p-6 sm:flex-row sm:items-start">
             <div>
               <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                 {calc.catalogNumber && (
                   <span
                     className="rounded-md px-2 py-0.5 font-mono text-[11px] font-bold text-white"
-                    style={{ background: 'var(--page-gradient)' }}
+                    style={{ background: categoryTheme.gradient }}
                   >
                     #{calc.catalogNumber}
                   </span>
                 )}
-                <span>{calc.categoryLabel}</span>
+                <Link to={`/${activeLang}/${calc.category}`} className="font-medium hover:underline">
+                  {calc.categoryLabel}
+                </Link>
                 {calc.subcategory && (
                   <>
                     <span aria-hidden="true">·</span>
@@ -419,12 +440,17 @@ export const CalculatorDetailPage: React.FC = () => {
                   </>
                 )}
                 {calc.toolKind === 'live-tool' && (
-                  <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-300">
-                    <Radio className="h-3 w-3" /> Live Server Tool
-                  </span>
+                  <>
+                    <span aria-hidden="true">·</span>
+                    <span className="inline-flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-300">
+                      <Radio className="h-3 w-3" /> Live Server Tool
+                    </span>
+                  </>
                 )}
               </div>
-              <h1 className="mt-2 font-display text-2xl font-bold sm:text-3xl">{calc.name}</h1>
+              <h1 className="mt-2 font-display text-2xl font-bold tracking-tight sm:text-3xl text-balance">
+                {calc.name}
+              </h1>
               <p className="mt-1.5 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
                 {calc.shortDescription}
               </p>
@@ -432,23 +458,31 @@ export const CalculatorDetailPage: React.FC = () => {
             <button
               type="button"
               onClick={() => toggleFavorite(calc.id)}
-              className={`inline-flex min-h-[40px] items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-medium whitespace-nowrap shrink-0 ${
+              className={`inline-flex min-h-[40px] items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-medium whitespace-nowrap shrink-0 transition ${
                 isFav
                   ? 'border-rose-500/40 bg-rose-500/10 text-rose-500'
                   : 'border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'
               }`}
             >
               <Heart className={`h-4 w-4 ${isFav ? 'fill-current' : ''}`} />
-              <span>{isFav ? 'Favorited' : 'Add Favorite'}</span>
+              <span>{isFav ? 'Favorited' : 'Favorite'}</span>
             </button>
           </div>
         </LiquidGlassReveal>
       </CosmicEntrance>
 
-      {/* Main Workspace */}
+      {/* Main Precision Workspace */}
       <div className="grid gap-6 lg:grid-cols-12 items-start">
         <LiquidGlassReveal className="card-3d p-6 lg:col-span-5 space-y-4">
-          <h2 className="font-display text-base font-semibold">Input Parameters</h2>
+          <div className="flex items-center justify-between border-b border-slate-200/70 pb-3 dark:border-slate-800">
+            <h2 className="font-display text-base font-semibold">
+              {t('calc.inputs', 'Input Parameters')}
+            </h2>
+            <span className="font-mono text-[11px] text-slate-400">
+              {calc.inputs.length} field{calc.inputs.length === 1 ? '' : 's'}
+            </span>
+          </div>
+
           <div className="space-y-4">
             {calc.inputs.map((field) => (
               <label key={field.key} className="block space-y-1.5">
@@ -486,7 +520,7 @@ export const CalculatorDetailPage: React.FC = () => {
                         [field.key]: e.target.value,
                       }))
                     }
-                    className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white/90 px-3.5 py-2 font-mono text-sm text-slate-900 focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-100"
+                    className="min-h-[44px] w-full rounded-xl border border-slate-300 bg-white/90 px-3.5 py-2 font-mono text-sm text-slate-900 tabular-nums focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-100"
                   />
                 )}
               </label>
@@ -514,6 +548,37 @@ export const CalculatorDetailPage: React.FC = () => {
               {t('calc.reset', 'Reset')}
             </MagneticButton>
           </div>
+
+          {/* Direct Same-Category Quick Switcher inside Workspace */}
+          {categoryPeers.length > 0 && (
+            <div className="border-t border-slate-200/70 pt-4 dark:border-slate-800">
+              <div className="mb-2 flex items-center justify-between text-xs">
+                <span className="font-semibold text-slate-600 dark:text-slate-300">
+                  More in {calc.categoryLabel}
+                </span>
+                <Link
+                  to={`/${activeLang}/${calc.category}`}
+                  className="font-medium text-blue-600 hover:underline dark:text-blue-400"
+                >
+                  All →
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 lg:grid-cols-1">
+                {categoryPeers.map((peer) => (
+                  <Link
+                    key={peer.slug}
+                    to={`/${activeLang}/${peer.category}/${peer.slug}`}
+                    className="flex items-center justify-between gap-2 rounded-xl border border-slate-200/70 px-3 py-2 text-xs hover:bg-slate-100/70 dark:border-slate-800 dark:hover:bg-slate-800/60 transition"
+                  >
+                    <span className="truncate font-medium text-slate-800 dark:text-slate-200">
+                      #{peer.catalogNumber} {peer.name}
+                    </span>
+                    <ArrowRight className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </LiquidGlassReveal>
 
         <div className="space-y-6 lg:col-span-7">
@@ -547,7 +612,7 @@ export const CalculatorDetailPage: React.FC = () => {
               <div className="flex items-start gap-3 text-rose-600 dark:text-rose-400">
                 <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" />
                 <div>
-                  <h2 className="font-semibold text-sm">Input Validation Error</h2>
+                  <h2 className="font-semibold text-sm">{t('calc.errorTitle', 'Input Validation Error')}</h2>
                   <p className="mt-1 text-sm">{error}</p>
                 </div>
               </div>
@@ -557,15 +622,17 @@ export const CalculatorDetailPage: React.FC = () => {
               keyTrigger={`${calc.id}-${result.primary.formatted}`}
               className="liquid-glass card-3d rounded-2xl p-6 space-y-5"
             >
+              {/* Precision Primary Result Readout */}
               <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200/70 pb-4 dark:border-slate-800">
                 <div>
                   <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
                     {result.primary.label}
-                    {result.isApproximate ? ' · Numerical Approximation' : ' · Verified Deterministic Output'}
+                    <span aria-hidden="true"> · </span>
+                    {result.isApproximate ? 'Numerical Approximation' : 'Verified Deterministic Output'}
                   </div>
                   <div
                     className="mt-1 font-display text-3xl font-bold tabular-nums sm:text-4xl"
-                    style={{ color: 'var(--page-accent)' }}
+                    style={{ color: categoryTheme.primary }}
                   >
                     {result.primary.formatted}
                   </div>
@@ -574,8 +641,8 @@ export const CalculatorDetailPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleDownloadPdf}
-                    className="btn-3d inline-flex min-h-[38px] items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold text-white"
-                    style={{ background: 'var(--page-gradient)' }}
+                    className="btn-3d inline-flex min-h-[38px] items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold text-white whitespace-nowrap shrink-0"
+                    style={{ background: categoryTheme.gradient }}
                   >
                     <FileDown className="h-3.5 w-3.5" />
                     <span>{t('calc.downloadPdf', 'PDF Report')}</span>
@@ -583,7 +650,7 @@ export const CalculatorDetailPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => void handleCopy()}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
+                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
                   >
                     {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
                     <span>{copied ? 'Copied' : t('calc.copy', 'Copy')}</span>
@@ -591,7 +658,7 @@ export const CalculatorDetailPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => void handleShare()}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
+                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
                   >
                     <Share2 className="h-3.5 w-3.5" />
                     <span>{t('calc.share', 'Share')}</span>
@@ -599,44 +666,49 @@ export const CalculatorDetailPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleSave}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
+                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
                   >
                     <Bookmark className="h-3.5 w-3.5" />
-                    <span>Save</span>
+                    <span>{t('calc.save', 'Save')}</span>
                   </button>
                   <button
                     type="button"
                     onClick={handleDownloadCsv}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
+                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
                   >
                     <Download className="h-3.5 w-3.5" />
-                    <span>CSV</span>
+                    <span>{t('calc.csv', 'CSV')}</span>
                   </button>
                   <button
                     type="button"
                     onClick={handleCreateReport}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
+                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
                   >
                     <FileText className="h-3.5 w-3.5" />
-                    <span>Report</span>
+                    <span>{t('calc.report', 'Report')}</span>
                   </button>
                 </div>
               </div>
 
               {/* Breakdown Metrics */}
               {result.breakdown.length > 0 && (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {result.breakdown.map((b) => (
-                    <div
-                      key={b.label}
-                      className="rounded-xl border border-slate-200/70 p-3.5 dark:border-slate-800"
-                    >
-                      <div className="text-xs text-slate-500 dark:text-slate-400">{b.label}</div>
-                      <div className="mt-1 font-mono text-base font-semibold tabular-nums text-slate-900 dark:text-slate-100">
-                        {b.formatted}
+                <div>
+                  <h3 className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    {t('calc.breakdown', 'Detailed Breakdown')}
+                  </h3>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {result.breakdown.map((b) => (
+                      <div
+                        key={b.label}
+                        className="rounded-xl border border-slate-200/70 p-3.5 dark:border-slate-800"
+                      >
+                        <div className="text-xs text-slate-500 dark:text-slate-400">{b.label}</div>
+                        <div className="mt-1 font-mono text-base font-semibold tabular-nums text-slate-900 dark:text-slate-100">
+                          {b.formatted}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               )}
 
@@ -657,7 +729,7 @@ export const CalculatorDetailPage: React.FC = () => {
               {/* Step-by-Step Formula & Explanation */}
               <div className="space-y-2 border-t border-slate-200/70 pt-4 text-xs dark:border-slate-800">
                 <div className="font-semibold text-slate-700 dark:text-slate-200">
-                  {t('calc.formula', 'Formula')}: <span className="font-mono font-normal">{calc.formulaDisplay}</span>
+                  {t('calc.formula', 'Formula')}: <code className="font-mono font-normal">{calc.formulaDisplay}</code>
                 </div>
                 <p className="text-slate-600 dark:text-slate-400">{calc.explanation}</p>
                 {result.steps.map((s, idx) => (
@@ -667,8 +739,8 @@ export const CalculatorDetailPage: React.FC = () => {
                 ))}
                 {(calc.assumptions || safetyDisclaimer) && (
                   <div className="mt-2 rounded-lg bg-amber-500/10 p-3 text-amber-800 dark:text-amber-200 space-y-1">
-                    {calc.assumptions && <div><strong>Assumptions:</strong> {calc.assumptions}</div>}
-                    {safetyDisclaimer && <div><strong>Note:</strong> {safetyDisclaimer}</div>}
+                    {calc.assumptions && <div><strong>{t('calc.assumptions', 'Assumptions')}:</strong> {calc.assumptions}</div>}
+                    {safetyDisclaimer && <div><strong>{t('calc.disclaimer', 'Notice')}:</strong> {safetyDisclaimer}</div>}
                   </div>
                 )}
               </div>
@@ -711,17 +783,17 @@ export const CalculatorDetailPage: React.FC = () => {
               <strong>{result ? `${result.primary.label} = ${result.primary.formatted}` : 'live results'}</strong>.
             </p>
             <details className="rounded-xl border border-slate-200/70 p-3 dark:border-slate-800">
-              <summary className="cursor-pointer font-semibold">Can I export this calculation as a PDF or CSV?</summary>
+              <summary className="cursor-pointer font-semibold">Can I switch tools without going back to Home?</summary>
               <p className="mt-1.5 text-slate-600 dark:text-slate-400">
-                Yes. Click <strong>PDF Report</strong> for a downloadable formatted report or <strong>CSV</strong> for spreadsheet export.
+                Yes. Use <strong>Switch Calculator (⌘K)</strong>, <strong>Prev/Next</strong>, or the <strong>More in {calc.categoryLabel}</strong> list right inside this view, or press <strong>← Back</strong> / <strong>× Close</strong> anytime.
               </p>
             </details>
             <details className="rounded-xl border border-slate-200/70 p-3 dark:border-slate-800">
-              <summary className="cursor-pointer font-semibold">Does this work offline?</summary>
+              <summary className="cursor-pointer font-semibold">Does this work offline and support PDF export?</summary>
               <p className="mt-1.5 text-slate-600 dark:text-slate-400">
                 {calc.toolKind === 'live-tool'
                   ? 'Live DNS/WHOIS/SSL diagnostics require an active server connection and honestly show Service Unavailable offline.'
-                  : 'Yes! All mathematical, financial, scientific, and engineering formulas execute 100% locally in your browser via PWA offline support.'}
+                  : 'Yes! All mathematical, financial, scientific, and engineering formulas execute 100% locally in your browser with full PDF and CSV export.'}
               </p>
             </details>
           </LiquidGlassReveal>

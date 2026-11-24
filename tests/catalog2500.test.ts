@@ -72,6 +72,24 @@ describe('Master 2,500 Calculator Verification Suite', () => {
     expect(Number(nrrRes.primary.value)).toBeCloseTo(1.0, 2);
   });
 
+  it('handles zero/boundary inputs cleanly without NaN or Infinity', () => {
+    const emi = resolveCalculatorSync('emi-calculator');
+    expect(emi).toBeDefined();
+    const zeroRateEmi = emi!.compute({ principal: 120000, rate: 0, years: 1 }, { locale: 'en-US', currency: 'USD' });
+    expect(Number(zeroRateEmi.primary.value)).toBeCloseTo(10000, 2);
+    expect(() => emi!.compute({ principal: 120000, rate: 5, years: 0 })).toThrow();
+
+    const bmi = resolveCalculatorSync('bmi-calculator');
+    expect(bmi).toBeDefined();
+    const bmiRes = bmi!.compute({ weight: 70, heightCm: 175 });
+    expect(Number(bmiRes.primary.value)).toBeCloseTo(22.86, 1);
+    expect(() => bmi!.compute({ weight: 0, heightCm: 175 })).toThrow();
+
+    const cidrHost = resolveCalculatorSync('ip-subnet-calculator');
+    const hostRes = cidrHost!.compute({ ip: '10.0.0.1', cidr: 32 });
+    expect(Number(hostRes.primary.value)).toBe(1);
+  });
+
   it('separates live DNS/WHOIS/SSL/Ping tools explicitly as live-tool', () => {
     const dns = CATALOG_2500.find((c) => c.slug === 'dns-lookup-tool');
     const ssl = CATALOG_2500.find((c) => c.slug === 'ssl-certificate-checker');

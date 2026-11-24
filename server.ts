@@ -1,12 +1,65 @@
 import crypto from 'node:crypto';
 import dns from 'node:dns';
 import fs from 'node:fs';
+import net from 'node:net';
 import path from 'node:path';
 import tls from 'node:tls';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import { GoogleGenAI, Type } from '@google/genai';
+
+function isPrivateOrReservedIp(rawIp: string): boolean {
+  const ip = rawIp.toLowerCase().replace(/^::ffff:/, '');
+  if (net.isIPv4(ip)) {
+    const parts = ip.split('.').map(Number);
+    if (parts.length !== 4 || parts.some((n) => Number.isNaN(n))) return true;
+    const [a, b] = parts;
+    if (a === 0 || a === 10 || a === 127) return true; // 0.0.0.0/8, 10.0.0.0/8, 127.0.0.0/8
+    if (a === 100 && b >= 64 && b <= 127) return true; // 100.64.0.0/10 CGNAT
+    if (a === 169 && b === 254) return true; // 169.254.0.0/16 Link-local / Cloud Metadata
+    if (a === 172 && b >= 16 && b <= 31) return true; // 172.16.0.0/12
+    if (a === 192 && b === 168) return true; // 192.168.0.0/16
+    if (a === 192 && b === 0) return true;
+    if (a >= 224) return true; // Multicast & Reserved
+    return false;
+  }
+  if (net.isIPv6(ip)) {
+    if (ip === '::' || ip === '::1') return true;
+    if (ip.startsWith('fc') || ip.startsWith('fd')) return true; // Unique local fc00::/7
+    if (ip.startsWith('fe8') || ip.startsWith('fe9') || ip.startsWith('fea') || ip.startsWith('feb')) return true; // fe80::/10
+    if (ip.startsWith('ff')) return true; // Multicast
+    return false;
+  }
+  return true;
+}
+
+function createRateLimiter(maxRequests: number, windowMs: number) {
+  const hits = new Map<string, number[]>();
+  return (req: Request, res: Response, next: NextFunction): void => {
+    const ip = String(req.headers['x-forwarded-for'] || req.ip || 'unknown').split(',')[0].trim();
+    const now = Date.now();
+    const recent = (hits.get(ip) || []).filter((t) => now - t < windowMs);
+    if (recent.length >= maxRequests) {
+      res.status(429).json({
+        available: false,
+        error: 'Rate limit exceeded. Please wait briefly before retrying.',
+      });
+      return;
+    }
+    recent.push(now);
+    hits.set(ip, recent);
+    if (hits.size > 5000) {
+      for (const [k, v] of hits.entries()) {
+        if (v.every((t) => now - t >= windowMs)) hits.delete(k);
+      }
+    }
+    next();
+  };
+}
+
+const liveToolLimiter = createRateLimiter(30, 60 * 1000);
+const adminAuthLimiter = createRateLimiter(12, 5 * 60 * 1000);
 
 dotenv.config();
 
@@ -324,7 +377,7 @@ async function startServer(): Promise<void> {
           slug: string;
           category: string;
         }>;
-        catalogUrls = list.slice(0, 500).map((item) => `/en/${item.category}/${item.slug}`);
+        catalogUrls = list.map((item) => `/en/${item.category}/${item.slug}`);
       }
     } catch {
       // Ignore if file missing
@@ -347,17 +400,25 @@ async function startServer(): Promise<void> {
     res.json({ ok: true, totalClicks: store.ads.totalClicks });
   });
 
-  // Live Network Diagnostics Tool (real DNS, TLS/SSL, RDAP/WHOIS, HTTP Ping; zero mock data)
-  app.post('/api/live-tool', async (req: Request, res: Response) => {
+  // Live Network Diagnostics Tool (real DNS, TLS/SSL, RDAP/WHOIS, HTTP Ping; zero mock data + SSRF protection)
+  app.post('/api/live-tool', liveToolLimiter, async (req: Request, res: Response) => {
     const rawDomain = typeof req.body?.domain === 'string' ? req.body.domain.trim() : '';
     const lookupType = typeof req.body?.lookupType === 'string' ? req.body.lookupType : 'dns';
     const domain = rawDomain.replace(/^https?:\/\//i, '').split('/')[0].split(':')[0].toLowerCase();
 
+    if (!['dns', 'ssl', 'whois', 'ping'].includes(lookupType)) {
+      res.status(400).json({ available: false, error: 'Unsupported lookupType. Choose dns, ssl, whois, or ping.' });
+      return;
+    }
+
     if (
       !domain ||
       domain.length > 253 ||
+      net.isIP(domain) !== 0 ||
       !/^[a-z0-9.-]+\.[a-z]{2,}$/.test(domain) ||
       domain.endsWith('.local') ||
+      domain.endsWith('.internal') ||
+      domain.endsWith('.arpa') ||
       domain === 'localhost'
     ) {
       res.status(400).json({ available: false, error: 'Enter a valid public domain name (e.g. example.com).' });
@@ -365,6 +426,16 @@ async function startServer(): Promise<void> {
     }
 
     try {
+      // Pre-flight DNS resolution to block private/loopback/metadata IP binding (SSRF protection)
+      const resolved = await dns.promises.lookup(domain, { all: true }).catch(() => []);
+      if (resolved.some((addr) => isPrivateOrReservedIp(addr.address))) {
+        res.status(403).json({
+          available: false,
+          error: 'Target resolves to a private or restricted network address.',
+        });
+        return;
+      }
+
       if (lookupType === 'dns') {
         const [aRecords, mxRecords, txtRecords] = await Promise.all([
           dns.promises.resolve4(domain).catch(() => [] as string[]),
@@ -511,6 +582,7 @@ async function startServer(): Promise<void> {
       const timer = setTimeout(() => controller.abort(), 7000);
       const headRes = await fetch(`https://${domain}/`, {
         method: 'HEAD',
+        redirect: 'manual',
         signal: controller.signal,
       });
       clearTimeout(timer);
@@ -745,7 +817,7 @@ ${availableCalculators
   });
 
   // One-time admin claim if ADMIN_PASSCODE is unset and not yet claimed
-  app.post('/api/admin/claim', (req: Request, res: Response) => {
+  app.post('/api/admin/claim', adminAuthLimiter, (req: Request, res: Response) => {
     if (process.env.ADMIN_PASSCODE?.trim()) {
       res.status(409).json({ error: 'Admin passcode is managed by environment secrets.' });
       return;
@@ -769,7 +841,7 @@ ${availableCalculators
   });
 
   // Admin login
-  app.post('/api/admin/login', (req: Request, res: Response) => {
+  app.post('/api/admin/login', adminAuthLimiter, (req: Request, res: Response) => {
     const passcode = typeof req.body?.passcode === 'string' ? req.body.passcode.trim() : '';
     if (!passcode || !verifyPasscode(passcode)) {
       res.status(401).json({ error: 'Invalid admin passcode.' });
