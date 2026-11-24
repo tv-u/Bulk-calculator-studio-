@@ -1,3 +1,8 @@
 name = "bulk-calculator-studio"
 compatibility_date = "2026-01-01"
 pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bulk-calculator-studio-db"
+database_id = "487efb30-5f25-4ff9-9dc6-1fe2cb2adcfb"
