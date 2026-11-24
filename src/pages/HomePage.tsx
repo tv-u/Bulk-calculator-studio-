@@ -32,6 +32,7 @@ import {
   MagneticButton,
 } from '../components/motion/MotionLibrary';
 import { MonetagAdSlot } from '../components/ads/MonetagAdSlot';
+import { CalculatorToolCard } from '../components/calculators/CalculatorToolCard';
 
 const FEATURED_SLUGS = [
   'emi-calculator',
@@ -45,7 +46,7 @@ const FEATURED_SLUGS = [
 ];
 
 export const HomePage: React.FC = () => {
-  const { unpublishedCalculators, customCalculators, history, language, t } = useStudio();
+  const { unpublishedCalculators, customCalculators, favorites, toggleFavorite, history, language, t } = useStudio();
   const published = getPublishedCatalogEntries(unpublishedCalculators);
   const featured = FEATURED_SLUGS.map((slug) => CATALOG_2500.find((c) => c.slug === slug)).filter(Boolean);
   const recentTools = history.slice(0, 4);
@@ -149,34 +150,17 @@ export const HomePage: React.FC = () => {
           </Link>
         </div>
 
-        <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {featured.map((calc) => {
             if (!calc) return null;
-            const theme = resolveCategoryTheme(calc.category);
             return (
-              <Link
+              <CalculatorToolCard
                 key={calc.id}
-                to={`/${language}/${calc.category}/${calc.slug || calc.id}`}
-                className="liquid-glass card-3d overflow-hidden rounded-2xl p-4 hover:border-blue-500/40"
-              >
-                <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                  <span>{calc.categoryLabel}</span>
-                  {calc.catalogNumber && (
-                    <span
-                      className="rounded px-1.5 py-0.5 font-mono text-[10px] font-bold text-white"
-                      style={{ background: theme.gradient }}
-                    >
-                      #{calc.catalogNumber}
-                    </span>
-                  )}
-                </div>
-                <h3 className="mt-1.5 font-display text-sm font-semibold text-slate-900 dark:text-slate-100">
-                  {calc.name}
-                </h3>
-                <p className="mt-1 line-clamp-2 text-xs text-slate-600 dark:text-slate-400">
-                  {calc.subcategory} · Deterministic verified formula
-                </p>
-              </Link>
+                item={calc}
+                activeLang={language}
+                isFavorite={favorites.includes(calc.slug) || favorites.includes(calc.id)}
+                onToggleFavorite={toggleFavorite}
+              />
             );
           })}
         </div>

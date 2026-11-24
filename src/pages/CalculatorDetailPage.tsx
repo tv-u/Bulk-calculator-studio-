@@ -34,6 +34,7 @@ import {
 import { SimpleBarChart } from '../components/charts/SimpleChart';
 import { MonetagAdSlot } from '../components/ads/MonetagAdSlot';
 import { QuickCalculatorBar } from '../components/calculators/QuickCalculatorBar';
+import { CalculatorToolCard } from '../components/calculators/CalculatorToolCard';
 
 interface LiveToolResponse {
   available: boolean;
@@ -806,19 +807,27 @@ export const CalculatorDetailPage: React.FC = () => {
       {related.length > 0 && (
         <section>
           <h2 className="mb-3 font-display text-lg font-bold">{t('calc.related', 'Related Calculators')}</h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {related.map((rc) => {
               if (!rc) return null;
               const rcSlug = 'slug' in rc && rc.slug ? rc.slug : rc.id;
               return (
-                <Link
+                <CalculatorToolCard
                   key={rcSlug}
-                  to={`/${activeLang}/${rc.category}/${rcSlug}`}
-                  className="liquid-glass card-3d rounded-xl p-4 hover:border-blue-500/40"
-                >
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">{rc.categoryLabel}</div>
-                  <div className="mt-1 font-display text-sm font-semibold">{rc.name}</div>
-                </Link>
+                  item={{
+                    id: rc.id,
+                    slug: rcSlug,
+                    name: rc.name,
+                    catalogNumber: 'catalogNumber' in rc ? rc.catalogNumber : undefined,
+                    category: rc.category,
+                    categoryLabel: rc.categoryLabel,
+                    subcategory: 'subcategory' in rc ? rc.subcategory : undefined,
+                    toolKind: 'toolKind' in rc ? rc.toolKind : undefined,
+                  }}
+                  activeLang={activeLang}
+                  isFavorite={favorites.includes(rcSlug) || favorites.includes(rc.id)}
+                  onToggleFavorite={toggleFavorite}
+                />
               );
             })}
           </div>

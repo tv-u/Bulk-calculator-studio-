@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowRight, Calculator, ChevronLeft, ChevronRight, Heart, Radio, Search } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { CATALOG_CATEGORIES, getPublishedCatalogEntries } from '../engine/calculators';
 import { resolveCategoryTheme } from '../theme/pageThemes';
 import { useStudio } from '../context/StudioContext';
 import { DocumentHead } from '../components/seo/DocumentHead';
 import { CosmicEntrance, LiquidGlassReveal } from '../components/motion/MotionLibrary';
 import { MonetagAdSlot } from '../components/ads/MonetagAdSlot';
+import { CalculatorToolCard } from '../components/calculators/CalculatorToolCard';
 
 const PAGE_SIZE = 48;
 
@@ -224,67 +225,15 @@ export const CalculatorsDirectoryPage: React.FC<{ mode?: 'all' | 'categories' }>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {pageItems.map((calc) => {
-              const isFav = favorites.includes(calc.slug);
-              const theme = resolveCategoryTheme(calc.category);
-              const url = `/${activeLang}/${calc.category}/${calc.slug}`;
-              return (
-                <div
-                  key={calc.slug}
-                  className="liquid-glass card-3d flex flex-col justify-between rounded-2xl p-5"
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span
-                          className="rounded px-1.5 py-0.5 font-mono text-[10px] font-bold text-white shrink-0"
-                          style={{ background: theme.gradient }}
-                        >
-                          #{calc.catalogNumber}
-                        </span>
-                        <span className="truncate text-xs text-slate-500 dark:text-slate-400">
-                          {calc.subcategory}
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => toggleFavorite(calc.slug)}
-                        className={`flex h-8 w-8 items-center justify-center rounded-lg transition shrink-0 ${
-                          isFav
-                            ? 'text-rose-500'
-                            : 'text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800'
-                        }`}
-                        aria-label={isFav ? `Remove ${calc.name} from favorites` : `Favorite ${calc.name}`}
-                      >
-                        <Heart className={`h-4 w-4 ${isFav ? 'fill-current' : ''}`} />
-                      </button>
-                    </div>
-                    <Link to={url} className="group block mt-1.5">
-                      <h3 className="font-display text-base font-semibold group-hover:text-blue-500 dark:group-hover:text-blue-400">
-                        {calc.name}
-                      </h3>
-                      <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-                        {calc.categoryLabel} · {calc.toolKind === 'live-tool' ? 'Live Server Tool' : calc.toolKind === 'converter' ? 'Unit Converter' : 'Verified Deterministic Solver'}
-                      </p>
-                    </Link>
-                  </div>
-
-                  <div className="mt-4 flex items-center justify-between border-t border-slate-200/60 pt-3 dark:border-slate-800">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
-                      {calc.toolKind === 'live-tool' && <Radio className="h-3 w-3 text-emerald-500" />}
-                      {calc.safetyClass !== 'standard' ? `${calc.safetyClass} precision` : calc.category}
-                    </span>
-                    <Link
-                      to={url}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline dark:text-blue-400 whitespace-nowrap shrink-0"
-                    >
-                      <Calculator className="h-3.5 w-3.5" />
-                      Open Tool
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
+            {pageItems.map((calc) => (
+              <CalculatorToolCard
+                key={calc.slug}
+                item={calc}
+                activeLang={activeLang}
+                isFavorite={favorites.includes(calc.slug) || favorites.includes(calc.id)}
+                onToggleFavorite={toggleFavorite}
+              />
+            ))}
           </div>
 
           {totalPages > 1 && (
