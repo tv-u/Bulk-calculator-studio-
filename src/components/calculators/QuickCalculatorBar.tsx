@@ -7,7 +7,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Layers,
+  Maximize2,
+  Minimize2,
   Search,
+  Target,
   X,
 } from 'lucide-react';
 import { CATALOG_2500, CATALOG_CATEGORIES } from '../../engine/calculators';
@@ -27,6 +30,7 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
   const navigate = useNavigate();
   const { unpublishedCalculators, t } = useStudio();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isFocusMode, setIsFocusMode] = useState(false);
   const [drawerCategory, setDrawerCategory] = useState<string>(calculator.category);
   const [drawerQuery, setDrawerQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -144,6 +148,16 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
             <kbd className="hidden sm:inline rounded bg-black/20 px-1.5 py-0.5 font-mono text-[10px]">
               ⌘K
             </kbd>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsFocusMode(true)}
+            className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-300 hover:bg-emerald-500/20 whitespace-nowrap shrink-0 transition"
+            title="Open Single Calculator Focus Mode (Distraction-Free)"
+          >
+            <Target className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Focus Mode</span>
           </button>
 
           <nav aria-label="Breadcrumb" className="hidden md:flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 ps-1">
@@ -345,6 +359,54 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
                 <Calculator className="h-3.5 w-3.5" />
                 Full Directory
               </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Single Calculator Focus Mode / Distraction-Free Theater Overlay */}
+      {isFocusMode && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-md overflow-y-auto"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Single Calculator Focus Mode"
+        >
+          <div className="relative w-full max-w-3xl rounded-3xl border border-slate-700/80 bg-slate-900/95 p-6 sm:p-8 shadow-2xl text-slate-100 space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <div>
+                <div className="flex items-center gap-2 text-xs text-emerald-400 font-mono">
+                  <Target className="h-4 w-4" />
+                  <span>SINGLE CALCULATOR FOCUS MODE — ACTIVE</span>
+                </div>
+                <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-white">
+                  {calculator.name}
+                </h2>
+                <p className="text-xs text-slate-400">{calculator.categoryLabel} · {calculator.subcategory}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsFocusMode(false)}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-xs font-bold text-rose-300 hover:bg-rose-500/20 transition"
+              >
+                <X className="h-4 w-4" />
+                <span>Exit Focus Mode</span>
+              </button>
+            </div>
+
+            <div className="rounded-2xl bg-slate-950/80 p-5 border border-slate-800 text-center space-y-3">
+              <p className="text-sm text-slate-300">
+                You are in Distraction-Free Focus Mode. All listings, sidebars, and extra headers are hidden. Use the inputs below or click <strong>Exit Focus Mode</strong> to return to the studio workspace.
+              </p>
+              <div className="pt-2 flex justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsFocusMode(false)}
+                  className="btn-3d rounded-xl px-5 py-2.5 text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600"
+                >
+                  Continue Calculating Here
+                </button>
+              </div>
             </div>
           </div>
         </div>
