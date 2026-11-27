@@ -1,18 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import { CATALOG_2500, resolveCalculatorSync } from '../src/engine/catalogResolverSync';
+import { buildCalculatorSeoMeta } from '../src/engine/seoMeta';
 
-describe('Master 2,500 Calculator Verification Suite', () => {
-  it('contains exact 2,500 entries with unique numbers 1..2500 and unique slugs', () => {
-    expect(CATALOG_2500.length).toBe(2500);
+describe('Master 2,600 Calculator Verification Suite', () => {
+  it('contains exact 2,600 entries with unique numbers 1..2600 and unique slugs', () => {
+    expect(CATALOG_2500.length).toBe(2600);
     const nums = new Set(CATALOG_2500.map((c) => c.catalogNumber));
     const slugs = new Set(CATALOG_2500.map((c) => c.slug));
-    expect(nums.size).toBe(2500);
-    expect(slugs.size).toBe(2500);
+    expect(nums.size).toBe(2600);
+    expect(slugs.size).toBe(2600);
     expect(CATALOG_2500[0].catalogNumber).toBe(1);
     expect(CATALOG_2500[2499].catalogNumber).toBe(2500);
+    expect(CATALOG_2500[2599].catalogNumber).toBe(2600);
   });
 
-  it('resolves and computes valid non-NaN deterministic results for ALL 2,500 calculators', () => {
+  it('resolves and computes valid non-NaN deterministic results for ALL 2,600 calculators', () => {
     const failures: Array<{ num: number; slug: string; err: string }> = [];
 
     for (const entry of CATALOG_2500) {
@@ -70,6 +72,40 @@ describe('Master 2,500 Calculator Verification Suite', () => {
     expect(nrr).toBeDefined();
     const nrrRes = nrr!.compute({ runsFor: 300, oversFaced: 50, runsAgainst: 250, oversBowled: 50 });
     expect(Number(nrrRes.primary.value)).toBeCloseTo(1.0, 2);
+  });
+
+  it('accurately computes supplemental #2501-#2600 tools (Quadratic, Roman, BigInt, BAC, Embed Widgets)', () => {
+    const quad = resolveCalculatorSync('quadratic-formula-calculator');
+    const qRes = quad!.compute({ a: 1, b: -5, c: 6 });
+    expect(qRes.primary.formatted).toContain('x₁ = 3');
+    expect(qRes.primary.formatted).toContain('x₂ = 2');
+
+    const roman = resolveCalculatorSync('roman-numeral-converter');
+    expect(roman!.compute({ input: '2026' }).primary.formatted).toBe('MMXXVI');
+    expect(roman!.compute({ input: 'MMXXVI' }).primary.formatted).toBe('2026');
+
+    const big = resolveCalculatorSync('big-number-calculator');
+    expect(big!.compute({ a: '100000000000000000000', op: 'add', b: '25' }).primary.formatted).toBe(
+      '100000000000000000025'
+    );
+
+    const b64 = resolveCalculatorSync('base64-encode-decode');
+    const enc = b64!.compute({ text: 'BulkCalc', mode: 'encode' }).primary.formatted;
+    expect(b64!.compute({ text: enc, mode: 'decode' }).primary.formatted).toBe('BulkCalc');
+
+    const widget = resolveCalculatorSync('mortgage-calculator-for-your-site');
+    const wRes = widget!.compute({ principal: 300000, apr: 6.5, years: 30 }, { locale: 'en-US', currency: 'USD' });
+    expect(String(wRes.breakdown[0].formatted)).toContain('<iframe');
+    expect(String(wRes.breakdown[0].formatted)).toContain('https://bulk-calculator-studio.pages.dev/calculators/mortgage-calculator-for-your-site/');
+  });
+
+  it('generates unique long-tail SEO metadata and canonical permalinks within bounds', () => {
+    for (const entry of CATALOG_2500.slice(2500)) {
+      const seo = buildCalculatorSeoMeta(entry);
+      expect(seo.canonicalUrl).toBe(`https://bulk-calculator-studio.pages.dev/calculators/${entry.slug}/`);
+      expect(seo.description.length).toBeLessThanOrEqual(160);
+      expect(seo.keywords.length).toBeGreaterThan(20);
+    }
   });
 
   it('handles zero/boundary inputs cleanly without NaN or Infinity', () => {

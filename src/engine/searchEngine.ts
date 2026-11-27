@@ -188,11 +188,11 @@ export function buildSearchIndex(
     id: c.slug,
     catalogNumber: c.catalogNumber,
     name: c.name,
-    route: `/${language}/${c.category}/${c.slug}`,
+    route: language === 'en' ? `/calculators/${c.slug}/` : `/${language}/${c.category}/${c.slug}`,
     category: c.category,
     categoryLabel: c.categoryLabel,
     shortDescription: `${c.subcategory} (#${c.catalogNumber}) · ${c.categoryLabel}`,
-    keywords: [c.category, c.subcategory.toLowerCase(), `#${c.catalogNumber}`],
+    keywords: [c.category, c.subcategory.toLowerCase(), `#${c.catalogNumber}`, ...(c.longTail ? c.longTail.split(' ') : [])],
     synonyms: [c.slug.replace(/-/g, ' ')],
     kind: 'calculator',
   }));
@@ -200,7 +200,7 @@ export function buildSearchIndex(
   const importedItems: SearchableDestination[] = importedCalculators.map((c) => ({
     id: c.slug,
     name: c.name,
-    route: `/${language}/${c.category}/${c.slug}`,
+    route: language === 'en' ? `/calculators/${c.slug}/` : `/${language}/${c.category}/${c.slug}`,
     category: c.category,
     categoryLabel: c.categoryLabel || 'Imported',
     shortDescription: `Imported calculator (${c.formula})`,

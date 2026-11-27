@@ -54,8 +54,8 @@ export const HomePage: React.FC = () => {
   return (
     <div className="space-y-8">
       <DocumentHead
-        title="BULK CALCULATOR STUDIO – 2,500 Verified Calculators in 50 Languages"
-        description="Precision computational ecosystem featuring 2,500 verified calculators across 15 domains, 50 languages, Direct PDF Reports, Bulk CSV Studio, Custom Builder, and Visual Workflows."
+        title={`BULK CALCULATOR STUDIO – ${published.length.toLocaleString()} Free Online Calculators`}
+        description={`Precision computational studio with ${published.length.toLocaleString()} free calculators across 15 domains, 50 languages, Bulk CSV Studio, Custom Formula Builder & PDF export.`}
         hreflangPath=""
       />
 
@@ -114,9 +114,12 @@ export const HomePage: React.FC = () => {
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {recentTools.map((h) => {
               const meta = CATALOG_2500.find((c) => c.slug === h.calculatorId || c.id === h.calculatorId);
-              const route = meta
-                ? `/${language}/${meta.category}/${meta.slug}`
-                : `/calculators/${h.calculatorId}`;
+              const route =
+                language === 'en'
+                  ? `/calculators/${meta ? meta.slug : h.calculatorId}/`
+                  : meta
+                  ? `/${language}/${meta.category}/${meta.slug}`
+                  : `/calculators/${h.calculatorId}/`;
               return (
                 <Link
                   key={h.id}

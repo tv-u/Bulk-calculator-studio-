@@ -349,26 +349,29 @@ async function startServer(): Promise<void> {
     res.send('monetag.com, 12282219, DIRECT\n');
   });
 
-  // Dynamic XML Sitemap for 2,500 Catalog Categories & Core Studio Routes
+  // Dynamic XML Sitemap for 2,600 Calculators & Core Studio Routes
   app.get('/sitemap.xml', (req: Request, res: Response) => {
     const origin = `${req.protocol}://${req.get('host')}`;
     const staticRoutes = [
       '/',
-      '/calculators',
-      '/categories',
-      '/bulk-calculator',
-      '/custom-calculator-builder',
-      '/workflow-builder',
-      '/unit-converter',
-      '/currency-converter',
-      '/math-lab',
-      '/finance-lab',
-      '/data-analysis',
-      '/formula-library',
-      '/en',
-      '/hi',
-      '/ar',
-      '/es',
+      '/calculators/',
+      '/categories/',
+      '/bulk-calculator/',
+      '/custom-calculator-builder/',
+      '/workflow-builder/',
+      '/unit-converter/',
+      '/currency-converter/',
+      '/math-lab/',
+      '/finance-lab/',
+      '/data-analysis/',
+      '/formula-library/',
+      '/about/',
+      '/contact/',
+      '/help/',
+      '/developer/',
+      '/privacy/',
+      '/terms/',
+      '/disclaimer/',
     ];
     let catalogUrls: string[] = [];
     try {
@@ -378,7 +381,7 @@ async function startServer(): Promise<void> {
           slug: string;
           category: string;
         }>;
-        catalogUrls = list.map((item) => `/en/${item.category}/${item.slug}`);
+        catalogUrls = list.map((item) => `/calculators/${item.slug}/`);
       }
     } catch {
       // Ignore if file missing

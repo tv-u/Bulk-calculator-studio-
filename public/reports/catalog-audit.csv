@@ -2499,3 +2499,103 @@ catalogNumber,id,name,partNumber,subcategory,category,toolKind,safetyClass,solve
 2498,safety-stock-optimization-calculator,"Safety Stock Optimization Calculator",50,"Logistics, Supply Chain & Transport",business,calculator,standard,businessHr,logistics_supply,safety-stock-optimization-calculator,false,validated
 2499,demand-forecasting-calculator,"Demand Forecasting Calculator",50,"Logistics, Supply Chain & Transport",business,calculator,standard,businessHr,logistics_supply,demand-forecasting-calculator,false,validated
 2500,logistics-roi-calculator,"Logistics ROI Calculator",50,"Logistics, Supply Chain & Transport",business,calculator,standard,businessHr,logistics_supply,logistics-roi-calculator,false,validated
+2501,auto-loan-calculator,"Auto Loan Calculator",51,"Auto & Vehicle Financing",finance,calculator,financial,exact,auto-loan-calculator,auto-loan-calculator,false,validated
+2502,payment-calculator,"Payment Calculator",51,"Loan & Credit Planning",finance,calculator,financial,exact,payment-calculator,payment-calculator,false,validated
+2503,amortization-calculator,"Amortization Calculator",51,"Mortgage & Amortization",finance,calculator,financial,exact,amortization-calculator,amortization-calculator,false,validated
+2504,currency-calculator,"Currency Calculator",51,"Foreign Exchange &FX",finance,converter,financial,exact,currency-calculator,currency-calculator,false,validated
+2505,finance-calculator,"Finance Calculator",51,"Time Value of Money",finance,calculator,financial,exact,finance-calculator,finance-calculator,false,validated
+2506,interest-rate-calculator,"Interest Rate Calculator",51,"Loan & Credit Planning",finance,calculator,financial,exact,interest-rate-calculator,interest-rate-calculator,false,validated
+2507,house-affordability-calculator,"House Affordability Calculator",51,"Real Estate & Home Buying",finance,calculator,financial,exact,house-affordability-calculator,house-affordability-calculator,false,validated
+2508,rent-calculator,"Rent Calculator",51,"Real Estate & Home Buying",finance,calculator,financial,exact,rent-calculator,rent-calculator,false,validated
+2509,estate-tax-calculator,"Estate Tax Calculator",51,"Taxation & Wealth Transfer",finance,calculator,financial,exact,estate-tax-calculator,estate-tax-calculator,false,validated
+2510,social-security-calculator,"Social Security Calculator",51,"Retirement & Pensions",finance,calculator,financial,exact,social-security-calculator,social-security-calculator,false,validated
+2511,annuity-payout-calculator,"Annuity Payout Calculator",51,"Retirement & Pensions",finance,calculator,financial,exact,annuity-payout-calculator,annuity-payout-calculator,false,validated
+2512,credit-cards-payoff-calculator,"Credit Cards Payoff Calculator",51,"Debt Management",finance,calculator,financial,exact,credit-cards-payoff-calculator,credit-cards-payoff-calculator,false,validated
+2513,bond-calculator,"Bond Calculator",51,"Fixed Income & Bonds",finance,calculator,financial,exact,bond-calculator,bond-calculator,false,validated
+2514,roth-ira-calculator,"Roth IRA Calculator",51,"Retirement & Pensions",finance,calculator,financial,exact,roth-ira-calculator,roth-ira-calculator,false,validated
+2515,rmd-calculator,"RMD Calculator",51,"Retirement & Pensions",finance,calculator,financial,exact,rmd-calculator,rmd-calculator,false,validated
+2516,cash-back-or-low-interest-calculator,"Cash Back or Low Interest Calculator",51,"Auto & Vehicle Financing",finance,calculator,financial,exact,cash-back-or-low-interest-calculator,cash-back-or-low-interest-calculator,false,validated
+2517,depreciation-calculator,"Depreciation Calculator",51,"Accounting & Assets",finance,calculator,financial,exact,depreciation-calculator,depreciation-calculator,false,validated
+2518,margin-calculator,"Margin Calculator",51,"Business Pricing & Margin",finance,calculator,financial,exact,margin-calculator,margin-calculator,false,validated
+2519,real-estate-calculator,"Real Estate Calculator",51,"Real Estate & Home Buying",finance,calculator,financial,exact,real-estate-calculator,real-estate-calculator,false,validated
+2520,lease-calculator,"Lease Calculator",51,"Equipment & Asset Leasing",finance,calculator,financial,exact,lease-calculator,lease-calculator,false,validated
+2521,budget-calculator,"Budget Calculator",51,"Personal Finance & Budgeting",finance,calculator,financial,exact,budget-calculator,budget-calculator,false,validated
+2522,apr-calculator,"APR Calculator",51,"Loan & Credit Planning",finance,calculator,financial,exact,apr-calculator,apr-calculator,false,validated
+2523,va-mortgage-calculator,"VA Mortgage Calculator",51,"Mortgage & Amortization",finance,calculator,financial,exact,va-mortgage-calculator,va-mortgage-calculator,false,validated
+2524,heloc-calculator,"HELOC Calculator",51,"Home Equity & Refinance",finance,calculator,financial,exact,heloc-calculator,heloc-calculator,false,validated
+2525,commission-calculator,"Commission Calculator",51,"Business Pricing & Margin",finance,calculator,financial,exact,commission-calculator,commission-calculator,false,validated
+2526,canadian-mortgage-calculator,"Canadian Mortgage Calculator",51,"Mortgage & Amortization",finance,calculator,financial,exact,canadian-mortgage-calculator,canadian-mortgage-calculator,false,validated
+2527,percent-off-calculator,"Percent Off Calculator",51,"Retail & Shopping Math",finance,calculator,standard,exact,percent-off-calculator,percent-off-calculator,false,validated
+2528,interest-calculator,"Interest Calculator",51,"Savings & Growth",finance,calculator,financial,exact,interest-calculator,interest-calculator,false,validated
+2529,mortgage-payoff-calculator,"Mortgage Payoff Calculator",51,"Mortgage & Amortization",finance,calculator,financial,exact,mortgage-payoff-calculator,mortgage-payoff-calculator,false,validated
+2530,401k-calculator,"401K Calculator",51,"Retirement & Pensions",finance,calculator,financial,exact,401k-calculator,401k-calculator,false,validated
+2531,marriage-tax-calculator,"Marriage Tax Calculator",51,"Taxation & Wealth Transfer",finance,calculator,financial,exact,marriage-tax-calculator,marriage-tax-calculator,false,validated
+2532,pension-calculator,"Pension Calculator",51,"Retirement & Pensions",finance,calculator,financial,exact,pension-calculator,pension-calculator,false,validated
+2533,credit-card-calculator,"Credit Card Calculator",51,"Debt Management",finance,calculator,financial,exact,credit-card-calculator,credit-card-calculator,false,validated
+2534,repayment-calculator,"Repayment Calculator",51,"Loan & Credit Planning",finance,calculator,financial,exact,repayment-calculator,repayment-calculator,false,validated
+2535,cd-calculator,"CD Calculator",51,"Savings & Growth",finance,calculator,financial,exact,cd-calculator,cd-calculator,false,validated
+2536,ira-calculator,"IRA Calculator",51,"Retirement & Pensions",finance,calculator,financial,exact,ira-calculator,ira-calculator,false,validated
+2537,auto-lease-calculator,"Auto Lease Calculator",51,"Auto & Vehicle Financing",finance,calculator,financial,exact,auto-lease-calculator,auto-lease-calculator,false,validated
+2538,average-return-calculator,"Average Return Calculator",51,"Investments & Portfolio",finance,calculator,financial,exact,average-return-calculator,average-return-calculator,false,validated
+2539,debt-to-income-ratio-calculator,"Debt-to-Income Ratio Calculator",51,"Loan & Credit Planning",finance,calculator,financial,exact,debt-to-income-ratio-calculator,debt-to-income-ratio-calculator,false,validated
+2540,take-home-paycheck-calculator,"Take-Home-Paycheck Calculator",51,"Payroll & Income",finance,calculator,financial,exact,take-home-paycheck-calculator,take-home-paycheck-calculator,false,validated
+2541,boat-loan-calculator,"Boat Loan Calculator",51,"Auto & Vehicle Financing",finance,calculator,financial,exact,boat-loan-calculator,boat-loan-calculator,false,validated
+2542,refinance-calculator,"Refinance Calculator",51,"Home Equity & Refinance",finance,calculator,financial,exact,refinance-calculator,refinance-calculator,false,validated
+2543,rental-property-calculator,"Rental Property Calculator",51,"Real Estate & Home Buying",finance,calculator,financial,exact,rental-property-calculator,rental-property-calculator,false,validated
+2544,fha-loan-calculator,"FHA Loan Calculator",51,"Mortgage & Amortization",finance,calculator,financial,exact,fha-loan-calculator,fha-loan-calculator,false,validated
+2545,home-equity-loan-calculator,"Home Equity Loan Calculator",51,"Home Equity & Refinance",finance,calculator,financial,exact,home-equity-loan-calculator,home-equity-loan-calculator,false,validated
+2546,payback-period-calculator,"Payback Period Calculator",51,"Capital Budgeting",finance,calculator,financial,exact,payback-period-calculator,payback-period-calculator,false,validated
+2547,mortgage-calculator-uk,"Mortgage Calculator UK",51,"Mortgage & Amortization",finance,calculator,financial,exact,mortgage-calculator-uk,mortgage-calculator-uk,false,validated
+2548,mortgage-amortization-calculator,"Mortgage Amortization Calculator",51,"Mortgage & Amortization",finance,calculator,financial,exact,mortgage-amortization-calculator,mortgage-amortization-calculator,false,validated
+2549,pregnancy-conception-calculator,"Pregnancy Conception Calculator",51,"Pregnancy & Fertility",health,calculator,clinical,exact,pregnancy-conception-calculator,pregnancy-conception-calculator,false,validated
+2550,pace-calculator,"Pace Calculator",51,"Running & Endurance",sports,calculator,standard,exact,pace-calculator,pace-calculator,false,validated
+2551,anorexic-bmi-calculator,"Anorexic BMI Calculator",51,"Clinical Screening & BMI",health,calculator,clinical,exact,anorexic-bmi-calculator,anorexic-bmi-calculator,false,validated
+2552,overweight-calculator,"Overweight Calculator",51,"Body Composition",health,calculator,clinical,exact,overweight-calculator,overweight-calculator,false,validated
+2553,bac-calculator,"BAC Calculator",51,"Clinical Toxicology",health,calculator,clinical,exact,bac-calculator,bac-calculator,false,validated
+2554,weight-watcher-points-calculator,"Weight Watcher Points Calculator",51,"Diet & Points Tracking",food,calculator,standard,exact,weight-watcher-points-calculator,weight-watcher-points-calculator,false,validated
+2555,random-number-generator,"Random Number Generator",51,"Probability & Sampling",mathematics,calculator,standard,exact,random-number-generator,random-number-generator,false,validated
+2556,percent-error-calculator,"Percent Error Calculator",51,"Measurement & Lab Error",mathematics,calculator,standard,exact,percent-error-calculator,percent-error-calculator,false,validated
+2557,mean-median-mode-range-calculator,"Mean, Median, Mode, Range Calculator",51,"Descriptive Statistics",mathematics,calculator,standard,exact,mean-median-mode-range-calculator,mean-median-mode-range-calculator,false,validated
+2558,greatest-common-factor-calculator,"Greatest Common Factor Calculator",51,"Number Theory",mathematics,calculator,standard,exact,greatest-common-factor-calculator,greatest-common-factor-calculator,false,validated
+2559,number-sequence-calculator,"Number Sequence Calculator",51,"Algebra & Sequences",mathematics,calculator,standard,exact,number-sequence-calculator,number-sequence-calculator,false,validated
+2560,hex-calculator,"Hex Calculator",51,"Base & Computer Math",mathematics,calculator,standard,exact,hex-calculator,hex-calculator,false,validated
+2561,quadratic-formula-calculator,"Quadratic Formula Calculator",51,"Algebra & Equations",mathematics,calculator,standard,exact,quadratic-formula-calculator,quadratic-formula-calculator,false,validated
+2562,log-calculator,"Log Calculator",51,"Algebra & Logarithms",mathematics,calculator,standard,exact,log-calculator,log-calculator,false,validated
+2563,sample-size-calculator,"Sample Size Calculator",51,"Inferential Statistics",mathematics,calculator,standard,exact,sample-size-calculator,sample-size-calculator,false,validated
+2564,statistics-calculator,"Statistics Calculator",51,"Descriptive Statistics",mathematics,calculator,standard,exact,statistics-calculator,statistics-calculator,false,validated
+2565,confidence-interval-calculator,"Confidence Interval Calculator",51,"Inferential Statistics",mathematics,calculator,standard,exact,confidence-interval-calculator,confidence-interval-calculator,false,validated
+2566,distance-calculator,"Distance Calculator",51,"Coordinate Geometry",mathematics,calculator,standard,exact,distance-calculator,distance-calculator,false,validated
+2567,factor-calculator,"Factor Calculator",51,"Number Theory",mathematics,calculator,standard,exact,factor-calculator,factor-calculator,false,validated
+2568,big-number-calculator,"Big Number Calculator",51,"Arbitrary Precision Math",mathematics,calculator,standard,exact,big-number-calculator,big-number-calculator,false,validated
+2569,common-factor-calculator,"Common Factor Calculator",51,"Number Theory",mathematics,calculator,standard,exact,common-factor-calculator,common-factor-calculator,false,validated
+2570,long-division-calculator,"Long Division Calculator",51,"Arithmetic & Fractions",mathematics,calculator,standard,exact,long-division-calculator,long-division-calculator,false,validated
+2571,height-calculator,"Height Calculator",51,"Growth & Anthropometry",health,calculator,standard,exact,height-calculator,height-calculator,false,validated
+2572,conversion-calculator,"Conversion Calculator",51,"Universal Unit Converters",daily-life,converter,standard,exact,conversion-calculator,conversion-calculator,false,validated
+2573,time-zone-calculator,"Time Zone Calculator",51,"Time & World Clock",daily-life,calculator,standard,exact,time-zone-calculator,time-zone-calculator,false,validated
+2574,gdp-calculator,"GDP Calculator",51,"Macroeconomics",business,calculator,standard,exact,gdp-calculator,gdp-calculator,false,validated
+2575,horsepower-calculator,"Horsepower Calculator",51,"Engine & Drivetrain",automotive,calculator,engineering,exact,horsepower-calculator,horsepower-calculator,false,validated
+2576,stair-calculator,"Stair Calculator",51,"Carpentry & Framing",construction,calculator,engineering,exact,stair-calculator,stair-calculator,false,validated
+2577,shoe-size-conversion,"Shoe Size Conversion",51,"Apparel & Sizing",daily-life,converter,standard,exact,shoe-size-conversion,shoe-size-conversion,false,validated
+2578,golf-handicap-calculator,"Golf Handicap Calculator",51,"Golf & Precision Sports",sports,calculator,standard,exact,golf-handicap-calculator,golf-handicap-calculator,false,validated
+2579,tire-size-calculator,"Tire Size Calculator",51,"Wheels & Tires",automotive,calculator,engineering,exact,tire-size-calculator,tire-size-calculator,false,validated
+2580,url-encode-decode,"URL Encode / Decode",51,"Web & Encoding Utilities",technology,converter,standard,exact,url-encode-decode,url-encode-decode,false,validated
+2581,day-counter,"Day Counter",51,"Date & Calendar",daily-life,calculator,standard,exact,day-counter,day-counter,false,validated
+2582,hours-calculator,"Hours Calculator",51,"Time & Scheduling",daily-life,calculator,standard,exact,hours-calculator,hours-calculator,false,validated
+2583,bra-size-calculator,"Bra Size Calculator",51,"Apparel & Sizing",daily-life,calculator,standard,exact,bra-size-calculator,bra-size-calculator,false,validated
+2584,dice-roller,"Dice Roller",51,"Probability & Tabletop",mathematics,calculator,standard,exact,dice-roller,dice-roller,false,validated
+2585,btu-calculator,"BTU Calculator",51,"HVAC & Climate",construction,calculator,engineering,exact,btu-calculator,btu-calculator,false,validated
+2586,time-card-calculator,"Time Card Calculator",51,"Payroll & Timesheets",business,calculator,financial,exact,time-card-calculator,time-card-calculator,false,validated
+2587,love-calculator,"Love Calculator",51,"Fun & Compatibility",daily-life,calculator,standard,exact,love-calculator,love-calculator,false,validated
+2588,gas-mileage-calculator,"Gas Mileage Calculator",51,"Fuel & Trip Planning",automotive,calculator,standard,exact,gas-mileage-calculator,gas-mileage-calculator,false,validated
+2589,engine-horsepower-calculator,"Engine Horsepower Calculator",51,"Engine & Drivetrain",automotive,calculator,engineering,exact,engine-horsepower-calculator,engine-horsepower-calculator,false,validated
+2590,electricity-calculator,"Electricity Calculator",51,"Home Energy & Bills",daily-life,calculator,standard,exact,electricity-calculator,electricity-calculator,false,validated
+2591,weight-calculator,"Weight Calculator",51,"Mass & Unit Converters",daily-life,converter,standard,exact,weight-calculator,weight-calculator,false,validated
+2592,roman-numeral-converter,"Roman Numeral Converter",51,"Numeral Systems",mathematics,converter,standard,exact,roman-numeral-converter,roman-numeral-converter,false,validated
+2593,roofing-calculator,"Roofing Calculator",51,"Roofing & Framing",construction,calculator,engineering,exact,roofing-calculator,roofing-calculator,false,validated
+2594,base64-encode-decode,"Base64 Encode / Decode",51,"Web & Encoding Utilities",technology,converter,standard,exact,base64-encode-decode,base64-encode-decode,false,validated
+2595,day-of-the-week-calculator,"Day of the Week Calculator",51,"Date & Calendar",daily-life,calculator,standard,exact,day-of-the-week-calculator,day-of-the-week-calculator,false,validated
+2596,mortgage-calculator-for-your-site,"Mortgage Calculator for Your Site",51,"Embeddable Site Widgets",technology,calculator,financial,exact,mortgage-calculator-for-your-site,mortgage-calculator-for-your-site,false,validated
+2597,scientific-calculator-for-your-site,"Scientific Calculator for Your Site",51,"Embeddable Site Widgets",technology,calculator,standard,exact,scientific-calculator-for-your-site,scientific-calculator-for-your-site,false,validated
+2598,concrete-calculator-for-your-site,"Concrete Calculator for Your Site",51,"Embeddable Site Widgets",technology,calculator,engineering,exact,concrete-calculator-for-your-site,concrete-calculator-for-your-site,false,validated
+2599,math-calculator-for-your-site,"Math Calculator for Your Site",51,"Embeddable Site Widgets",technology,calculator,standard,exact,math-calculator-for-your-site,math-calculator-for-your-site,false,validated
+2600,love-calculator-for-your-site,"Love Calculator for Your Site",51,"Embeddable Site Widgets",technology,calculator,standard,exact,love-calculator-for-your-site,love-calculator-for-your-site,false,validated

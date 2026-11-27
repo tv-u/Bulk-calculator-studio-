@@ -60,7 +60,7 @@ export const SmartSearch: React.FC<SmartSearchProps> = ({
 
   const effectivePlaceholder =
     placeholder ||
-    t('search.placeholder', 'Search 2,500 calculators, formulas, Hindi terms (byaj, kist)...');
+    t('search.placeholder', 'Search 2,600 calculators, formulas, Hindi terms (byaj, kist)...');
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedQuery(query), 80);
@@ -156,7 +156,7 @@ export const SmartSearch: React.FC<SmartSearchProps> = ({
           }}
           onKeyDown={handleKeyDown}
           placeholder={effectivePlaceholder}
-          aria-label="Search 2,500 calculators and studio tools"
+          aria-label="Search 2,600 calculators and studio tools"
           aria-expanded={isOpen}
           className={`w-full bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-slate-100 ${
             isHero ? 'text-sm sm:text-base' : 'text-sm'
@@ -189,7 +189,7 @@ export const SmartSearch: React.FC<SmartSearchProps> = ({
             <>
               <div className="mb-2 flex items-center justify-between px-2 text-xs text-slate-500 dark:text-slate-400">
                 <span>
-                  {matches.length} {matches.length === 1 ? 'result' : 'results'} across 2,500+ tools
+                  {matches.length} {matches.length === 1 ? 'result' : 'results'} across 2,600+ tools
                 </span>
                 <span>Use ↑↓ and Enter</span>
               </div>
@@ -291,7 +291,7 @@ export const SmartSearch: React.FC<SmartSearchProps> = ({
               )}
               <div>
                 <div className="mb-1.5 px-2 text-xs font-medium text-slate-500 dark:text-slate-400">
-                  Popular Across 2,500+ Calculators
+                  Popular Across 2,600+ Calculators
                 </div>
                 <div className="flex flex-wrap gap-1.5 px-1">
                   {SUGGESTED_QUERIES.map((sq) => (

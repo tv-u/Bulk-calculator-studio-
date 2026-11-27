@@ -4,6 +4,8 @@ import { SUPPORTED_LANGUAGES } from '../../i18n/languages';
 interface DocumentHeadProps {
   title: string;
   description: string;
+  keywords?: string;
+  canonicalUrl?: string;
   noIndex?: boolean;
   hreflangPath?: string; // e.g., "/finance/emi-calculator" (without /{lang})
   jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
@@ -12,6 +14,8 @@ interface DocumentHeadProps {
 export const DocumentHead: React.FC<DocumentHeadProps> = ({
   title,
   description,
+  keywords,
+  canonicalUrl: explicitCanonical,
   noIndex = false,
   hreflangPath,
   jsonLd,
@@ -29,8 +33,15 @@ export const DocumentHead: React.FC<DocumentHeadProps> = ({
       el.setAttribute('content', content);
     };
 
-    const canonicalUrl = `${window.location.origin}${window.location.pathname}`;
+    const origin =
+      typeof window !== 'undefined' && window.location.origin.startsWith('http')
+        ? window.location.origin
+        : 'https://bulk-calculator-studio.pages.dev';
+    const canonicalUrl = explicitCanonical || `${origin}${window.location.pathname}`;
     setMeta('meta[name="description"]', 'name', 'description', description);
+    if (keywords) {
+      setMeta('meta[name="keywords"]', 'name', 'keywords', keywords);
+    }
     setMeta('meta[property="og:title"]', 'property', 'og:title', title);
     setMeta('meta[property="og:description"]', 'property', 'og:description', description);
     setMeta('meta[property="og:url"]', 'property', 'og:url', canonicalUrl);
@@ -45,7 +56,12 @@ export const DocumentHead: React.FC<DocumentHeadProps> = ({
         document.head.appendChild(robots);
       }
       robots.setAttribute('content', 'noindex, nofollow');
-    } else if (robots) {
+    } else {
+      if (!robots) {
+        robots = document.createElement('meta');
+        robots.setAttribute('name', 'robots');
+        document.head.appendChild(robots);
+      }
       robots.setAttribute('content', 'index, follow');
     }
 
@@ -59,8 +75,7 @@ export const DocumentHead: React.FC<DocumentHeadProps> = ({
 
     // Clear previously injected hreflang tags & re-emit when hreflangPath is present
     document.querySelectorAll('link[data-bcs-hreflang="1"]').forEach((n) => n.remove());
-    if (hreflangPath) {
-      const origin = window.location.origin;
+    if (hreflangPath !== undefined) {
       for (const lang of SUPPORTED_LANGUAGES) {
         const link = document.createElement('link');
         link.setAttribute('rel', 'alternate');
@@ -72,7 +87,7 @@ export const DocumentHead: React.FC<DocumentHeadProps> = ({
       const xDef = document.createElement('link');
       xDef.setAttribute('rel', 'alternate');
       xDef.setAttribute('hreflang', 'x-default');
-      xDef.setAttribute('href', `${origin}/en${hreflangPath}`);
+      xDef.setAttribute('href', explicitCanonical || `${origin}${hreflangPath}`);
       xDef.setAttribute('data-bcs-hreflang', '1');
       document.head.appendChild(xDef);
     }
@@ -91,7 +106,7 @@ export const DocumentHead: React.FC<DocumentHeadProps> = ({
       document.querySelectorAll('link[data-bcs-hreflang="1"]').forEach((n) => n.remove());
       document.querySelectorAll('script[data-bcs-jsonld="1"]').forEach((n) => n.remove());
     };
-  }, [title, description, noIndex, hreflangPath, jsonLd]);
+  }, [title, description, keywords, explicitCanonical, noIndex, hreflangPath, jsonLd]);
 
   return null;
 };

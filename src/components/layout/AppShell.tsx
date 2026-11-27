@@ -49,7 +49,7 @@ const SIDEBAR_GROUPS = [
     items: [
       { to: '/', labelKey: 'nav.home', label: 'Home', icon: Home },
       { to: '/dashboard', labelKey: 'nav.dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { to: '/calculators', labelKey: 'nav.calculators', label: 'All 2,500 Calculators', icon: Calculator },
+      { to: '/calculators', labelKey: 'nav.calculators', label: 'All 2,600 Calculators', icon: Calculator },
       { to: '/categories', labelKey: 'nav.categories', label: '15 Categories', icon: Compass },
     ],
   },
@@ -389,7 +389,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
                   <span className="font-display text-base font-bold">BULK CALCULATOR STUDIO</span>
                 </div>
                 <p className="max-w-sm text-sm text-slate-600 dark:text-slate-400">
-                  2,500 verified calculators across 15 domains and 50 languages. Precision math, finance, engineering, live network tools, and bulk CSV automation.
+                  2,600 verified calculators across 15 domains and 50 languages. Precision math, finance, engineering, live network tools, and bulk CSV automation.
                 </p>
                 <div className="flex flex-wrap items-center gap-3">
                   <PWAInstallButton />
@@ -413,11 +413,11 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
                   Popular Calculators
                 </h3>
                 <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                  <li><Link to={`/${language}/finance/emi-calculator`} className="hover:underline">EMI Calculator</Link></li>
-                  <li><Link to={`/${language}/finance/sip-calculator`} className="hover:underline">SIP Calculator</Link></li>
-                  <li><Link to={`/${language}/finance/gst-calculator`} className="hover:underline">GST Calculator</Link></li>
-                  <li><Link to={`/${language}/health/bmi-calculator`} className="hover:underline">BMI Calculator</Link></li>
-                  <li><Link to={`/${language}/mathematics/percentage-calculator`} className="hover:underline">Percentage Calculator</Link></li>
+                  <li><Link to={language === 'en' ? '/calculators/emi-calculator/' : `/${language}/finance/emi-calculator`} className="hover:underline">EMI Calculator</Link></li>
+                  <li><Link to={language === 'en' ? '/calculators/amortization-calculator/' : `/${language}/finance/amortization-calculator`} className="hover:underline">Amortization Calculator</Link></li>
+                  <li><Link to={language === 'en' ? '/calculators/auto-loan-calculator/' : `/${language}/finance/auto-loan-calculator`} className="hover:underline">Auto Loan Calculator</Link></li>
+                  <li><Link to={language === 'en' ? '/calculators/bmi-calculator/' : `/${language}/health/bmi-calculator`} className="hover:underline">BMI Calculator</Link></li>
+                  <li><Link to={language === 'en' ? '/calculators/percentage-calculator/' : `/${language}/mathematics/percentage-calculator`} className="hover:underline">Percentage Calculator</Link></li>
                 </ul>
               </div>
 
@@ -452,7 +452,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
             </div>
 
             <div className="flex flex-col items-start justify-between gap-3 border-t border-slate-200/70 pt-6 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400 sm:flex-row sm:items-center">
-              <p>© {new Date().getFullYear()} BULK CALCULATOR STUDIO. All 2,500 deterministic engines verified.</p>
+              <p>© {new Date().getFullYear()} BULK CALCULATOR STUDIO. All 2,600 deterministic engines verified.</p>
               <div className="flex items-center gap-4">
                 <Link to="/categories" className="hover:underline">Categories</Link>
                 <Link to="/formula-library" className="hover:underline">Formula Library</Link>
@@ -472,7 +472,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
         >
           {[
             { to: '/', label: 'Home', icon: Home },
-            { to: '/calculators', label: '2,500', icon: Calculator },
+            { to: '/calculators', label: '2,600', icon: Calculator },
             { to: '/bulk-calculator', label: 'Bulk', icon: FileSpreadsheet },
             { to: '/dashboard', label: 'Dash', icon: LayoutDashboard },
           ].map((tab) => {
@@ -584,7 +584,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
       <CrystalModal
         open={mobileSearchOpen}
         onClose={() => setMobileSearchOpen(false)}
-        title="Smart 2,500-Calculator Search"
+        title="Smart 2,600-Calculator Search"
         maxWidth="max-w-2xl"
       >
         <div className="min-h-[320px]">

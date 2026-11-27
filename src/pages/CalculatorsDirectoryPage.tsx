@@ -49,7 +49,7 @@ export const CalculatorsDirectoryPage: React.FC<{ mode?: 'all' | 'categories' }>
 
   const allEntries = useMemo(() => {
     const importedMapped = importedCalculators.map((ic, i) => ({
-      catalogNumber: 2501 + i,
+      catalogNumber: publishedCatalog.length + 1 + i,
       id: ic.slug,
       slug: ic.slug,
       name: ic.name,
@@ -100,7 +100,7 @@ export const CalculatorsDirectoryPage: React.FC<{ mode?: 'all' | 'categories' }>
             ? '15 Calculator Categories – BULK CALCULATOR STUDIO'
             : `All ${allEntries.length.toLocaleString()} Calculators Directory – BULK CALCULATOR STUDIO`
         }
-        description="Browse all 2,500 verified Finance, Math, Health, Engineering, Construction, Science, Business, Legal, Sports, Automotive & Developer calculators."
+        description={`Browse all ${allEntries.length.toLocaleString()} verified Finance, Math, Health, Engineering, Construction, Science, Business, Legal, Sports, Automotive & Developer calculators.`}
         hreflangPath={selectedCat !== 'all' ? `/${selectedCat}` : '/calculators'}
       />
 
@@ -118,7 +118,7 @@ export const CalculatorsDirectoryPage: React.FC<{ mode?: 'all' | 'categories' }>
                   ? `${activeCategoryMeta.name}`
                   : mode === 'categories'
                   ? '15 Domain Categories'
-                  : 'All 2,500+ Calculators'}
+                  : `All ${allEntries.length.toLocaleString()} Calculators`}
               </h1>
             </div>
 
@@ -131,7 +131,7 @@ export const CalculatorsDirectoryPage: React.FC<{ mode?: 'all' | 'categories' }>
                   setFilterText(e.target.value);
                   setPage(1);
                 }}
-                placeholder="Filter 2,500 tools by name, #number, or domain..."
+                placeholder={`Filter ${allEntries.length.toLocaleString()} tools by name, #number, or domain...`}
                 className="w-full rounded-xl border border-slate-300 bg-white/80 py-2.5 ps-9 pe-3 text-sm focus:border-purple-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900/70"
               />
             </div>

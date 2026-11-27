@@ -502,6 +502,10 @@ export async function resolveCalculatorBySlugAsync(slugOrId: string): Promise<Ca
       const mod = await import('./solvers/techNetSolver');
       return attachCatalogMeta(mod.buildTechNetDefinition(entry), entry);
     }
+    case 'exact': {
+      const mod = await import('./solvers/exactToolSolvers');
+      return attachCatalogMeta(mod.buildExactToolDefinition(entry), entry);
+    }
     default: {
       const mod = await import('./solvers/businessAndDailySolver');
       return attachCatalogMeta(mod.buildBusinessAndDailyDefinition(entry), entry);

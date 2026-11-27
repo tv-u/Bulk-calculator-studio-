@@ -20,6 +20,7 @@ import {
   resolveCalculatorBySlugAsync,
   resolveCatalogEntryMeta,
 } from '../engine/catalogResolver';
+import { buildCalculatorCanonical, buildCalculatorSeoMeta, SITE_ORIGIN } from '../engine/seoMeta';
 import type { CalculatorDefinition, CalculatorResult } from '../engine/calculatorTypes';
 import { evaluateSafeFormula } from '../engine/safeMath';
 import { resolveCategoryTheme } from '../theme/pageThemes';
@@ -203,7 +204,7 @@ export const CalculatorDetailPage: React.FC = () => {
           This calculator does not exist or has been unpublished by the administrator.
         </p>
         <Link to="/calculators" className="mt-4 inline-block">
-          <MagneticButton variant="primary">Browse All 2,500 Calculators</MagneticButton>
+          <MagneticButton variant="primary">Browse All {CATALOG_2500.length.toLocaleString()} Calculators</MagneticButton>
         </Link>
       </LiquidGlassReveal>
     );
@@ -382,24 +383,39 @@ export const CalculatorDetailPage: React.FC = () => {
       ? 'Engineering Safety Notice: Apply statutory safety factors and local building/electrical codes before construction or wiring.'
       : undefined);
 
-  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const calcSlug = calc.slug || calc.id;
+  const catalogMeta = CATALOG_BY_SLUG.get(calcSlug);
+  const seoMeta = buildCalculatorSeoMeta(
+    {
+      name: calc.name,
+      slug: calcSlug,
+      category: calc.category,
+      categoryLabel: calc.categoryLabel,
+      subcategory: calc.subcategory,
+      longTail: catalogMeta?.longTail,
+    },
+    calc.shortDescription
+  );
+  const canonicalUrl = buildCalculatorCanonical(calcSlug);
   const schemaJsonLd = [
     {
       '@context': 'https://schema.org',
-      '@type': 'WebApplication',
+      '@type': 'SoftwareApplication',
       name: calc.name,
       applicationCategory: 'UtilitiesApplication',
-      operatingSystem: 'Any',
-      description: calc.shortDescription,
-      url: `${origin}/${activeLang}/${calc.category}/${calc.slug || calc.id}`,
+      operatingSystem: 'Web',
+      description: seoMeta.description,
+      url: canonicalUrl,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      isPartOf: { '@type': 'WebSite', name: 'BULK CALCULATOR STUDIO', url: SITE_ORIGIN },
     },
     {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
-        { '@type': 'ListItem', position: 2, name: calc.categoryLabel, item: `${origin}/${activeLang}/${calc.category}` },
-        { '@type': 'ListItem', position: 3, name: calc.name, item: `${origin}/${activeLang}/${calc.category}/${calc.slug || calc.id}` },
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_ORIGIN}/` },
+        { '@type': 'ListItem', position: 2, name: calc.categoryLabel, item: `${SITE_ORIGIN}/${activeLang}/${calc.category}` },
+        { '@type': 'ListItem', position: 3, name: calc.name, item: canonicalUrl },
       ],
     },
   ];
@@ -407,13 +423,15 @@ export const CalculatorDetailPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <DocumentHead
-        title={`${calc.name} (#${calc.catalogNumber || 'Studio'}) – BULK CALCULATOR STUDIO`}
-        description={calc.shortDescription}
-        hreflangPath={`/${calc.category}/${calc.slug || calc.id}`}
+        title={seoMeta.title}
+        description={seoMeta.description}
+        keywords={seoMeta.keywords}
+        canonicalUrl={canonicalUrl}
+        hreflangPath={`/${calc.category}/${calcSlug}`}
         jsonLd={schemaJsonLd}
       />
 
-      {/* Sticky Back, Close (x), Prev/Next & Instant 2,500-Calculator Switcher */}
+      {/* Sticky Back, Close (x), Prev/Next & Instant Switcher */}
       <QuickCalculatorBar calculator={calc} activeLang={activeLang} />
 
       {/* Category-Themed Precision Header */}
@@ -568,7 +586,7 @@ export const CalculatorDetailPage: React.FC = () => {
                 {categoryPeers.map((peer) => (
                   <Link
                     key={peer.slug}
-                    to={`/${activeLang}/${peer.category}/${peer.slug}`}
+                    to={activeLang === 'en' ? `/calculators/${peer.slug}/` : `/${activeLang}/${peer.category}/${peer.slug}`}
                     className="flex items-center justify-between gap-2 rounded-xl border border-slate-200/70 px-3 py-2 text-xs hover:bg-slate-100/70 dark:border-slate-800 dark:hover:bg-slate-800/60 transition"
                   >
                     <span className="truncate font-medium text-slate-800 dark:text-slate-200">

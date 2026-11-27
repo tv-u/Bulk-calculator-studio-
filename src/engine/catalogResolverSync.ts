@@ -14,6 +14,7 @@ import { buildChemBioDefinition } from './solvers/chemBioSolver';
 import { buildConstructionAgriDefinition } from './solvers/constructionAgriSolver';
 import { buildBusinessAndDailyDefinition } from './solvers/businessAndDailySolver';
 import { buildTechNetDefinition } from './solvers/techNetSolver';
+import { buildExactToolDefinition } from './solvers/exactToolSolvers';
 
 export { CATALOG_2500 };
 
@@ -50,6 +51,8 @@ export function resolveCalculatorSync(slugOrId: string): CalculatorDefinition | 
       return attachCatalogMeta(buildBusinessAndDailyDefinition(entry), entry);
     case 'techNet':
       return attachCatalogMeta(buildTechNetDefinition(entry), entry);
+    case 'exact':
+      return attachCatalogMeta(buildExactToolDefinition(entry), entry);
     default:
       return attachCatalogMeta(buildBusinessAndDailyDefinition(entry), entry);
   }

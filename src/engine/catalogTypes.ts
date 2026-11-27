@@ -36,6 +36,7 @@ export interface CatalogEntryMeta {
   canonicalSlug: string;
   isDuplicateName: boolean;
   status: 'validated' | 'published' | 'restricted' | 'unpublished' | 'pending';
+  longTail?: string;
 }
 
 export type DomainSolverFn = (entry: CatalogEntryMeta) => CalculatorDefinition;

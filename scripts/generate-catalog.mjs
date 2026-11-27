@@ -427,7 +427,46 @@ for (const line of lines) {
 }
 
 if (catalog.length !== 2500) {
-  throw new Error(`Expected exactly 2500 catalog items, got ${catalog.length}`);
+  throw new Error(`Expected exactly 2500 base catalog items, got ${catalog.length}`);
+}
+
+const SUPP_FILE = path.join(ROOT, 'scripts/supplemental-100.json');
+const supplemental = JSON.parse(fs.readFileSync(SUPP_FILE, 'utf8'));
+
+for (const item of supplemental) {
+  const num = catalog.length + 1;
+  const slug = item.slug || slugify(item.name);
+  if (slugCounts.has(slug)) {
+    throw new Error(`Supplemental slug collision detected: ${slug}`);
+  }
+  if (nameToIndices.has(item.name.toLowerCase())) {
+    throw new Error(`Supplemental duplicate name detected: ${item.name}`);
+  }
+  slugCounts.set(slug, 1);
+  nameToIndices.set(item.name.toLowerCase(), slug);
+
+  catalog.push({
+    catalogNumber: num,
+    id: slug,
+    slug,
+    name: item.name,
+    partNumber: 51,
+    subcategory: item.subcategory,
+    category: item.category,
+    categoryLabel: CATEGORY_LABELS[item.category] || item.category,
+    toolKind: item.toolKind || 'calculator',
+    safetyClass: item.safetyClass || 'standard',
+    solverFamily: 'exact',
+    solverKey: slug,
+    canonicalSlug: slug,
+    isDuplicateName: false,
+    status: 'validated',
+    longTail: item.longTail || undefined,
+  });
+}
+
+if (catalog.length !== 2600) {
+  throw new Error(`Expected exactly 2600 total catalog items, got ${catalog.length}`);
 }
 
 fs.mkdirSync(path.join(ROOT, 'public/reports'), { recursive: true });
@@ -491,6 +530,5 @@ fs.writeFileSync(
   JSON.stringify({ total: catalog.length, categories: catSummary, solvers: solverSummary }, null, 2)
 );
 
-console.log('Generated 2,500 catalog successfully!');
+console.log(`Generated ${catalog.length} catalog successfully!`);
 console.log('Categories:', catSummary);
-console.log('Solver breakdown:', solverSummary);

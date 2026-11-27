@@ -174,7 +174,7 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
         <div className="flex items-center gap-1.5 shrink-0">
           {prevCalc && (
             <Link
-              to={`/${activeLang}/${prevCalc.category}/${prevCalc.slug}`}
+              to={activeLang === 'en' ? `/calculators/${prevCalc.slug}/` : `/${activeLang}/${prevCalc.category}/${prevCalc.slug}`}
               className="inline-flex min-h-[38px] items-center gap-1 rounded-xl border border-slate-300/80 px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
               title={`Previous: ${prevCalc.name}`}
             >
@@ -184,7 +184,7 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
           )}
           {nextCalc && (
             <Link
-              to={`/${activeLang}/${nextCalc.category}/${nextCalc.slug}`}
+              to={activeLang === 'en' ? `/calculators/${nextCalc.slug}/` : `/${activeLang}/${nextCalc.category}/${nextCalc.slug}`}
               className="inline-flex min-h-[38px] items-center gap-1 rounded-xl border border-slate-300/80 px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
               title={`Next: ${nextCalc.name}`}
             >
@@ -223,7 +223,7 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
             <div className="flex items-center justify-between gap-3 border-b border-slate-200/70 pb-3 dark:border-slate-800">
               <div>
                 <h2 className="font-display text-lg font-bold">
-                  {t('calc.switch', 'Switch Calculator')} (2,500+)
+                  {t('calc.switch', 'Switch Calculator')} ({CATALOG_2500.length.toLocaleString()})
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   Jump directly to any tool without returning to the home page
@@ -312,7 +312,7 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
                       type="button"
                       onClick={() => {
                         setDrawerOpen(false);
-                        navigate(`/${activeLang}/${item.category}/${item.slug}`);
+                        navigate(activeLang === 'en' ? `/calculators/${item.slug}/` : `/${activeLang}/${item.category}/${item.slug}`);
                       }}
                       className={`flex w-full items-center justify-between gap-3 rounded-xl border p-3 text-start transition ${
                         isCurrent

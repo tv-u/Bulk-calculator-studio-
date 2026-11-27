@@ -1,16 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import { buildSearchIndex, searchRegistry } from '../src/engine/searchEngine';
 
-describe('Smart 2,500-Calculator Live Search Engine', () => {
+describe('Smart 2,600-Calculator Live Search Engine', () => {
   const index = buildSearchIndex([], [], 'en');
 
-  it('indexes all 2,500+ calculators and studio destinations', () => {
-    expect(index.length).toBeGreaterThanOrEqual(2510);
+  it('indexes all 2,600+ calculators and studio destinations', () => {
+    expect(index.length).toBeGreaterThanOrEqual(2610);
   });
 
-  it('ranks exact, prefix, and keyword matches accurately across 2,500 tools', () => {
+  it('ranks exact, prefix, and keyword matches accurately across 2,600 tools', () => {
     const emiMatches = searchRegistry('emi', index);
     expect(emiMatches[0].item.id).toBe('emi-calculator');
+    expect(emiMatches[0].item.route).toBe('/calculators/emi-calculator/');
+
+    const autoMatches = searchRegistry('auto loan', index);
+    expect(autoMatches.some((m) => m.item.id === 'auto-loan-calculator')).toBe(true);
 
     const gstMatches = searchRegistry('gst', index);
     expect(gstMatches[0].item.id).toBe('gst-calculator');

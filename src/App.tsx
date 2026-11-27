@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 import { StudioProvider } from './context/StudioContext';
 import { AppShell } from './components/layout/AppShell';
 import { isSupportedLanguage } from './i18n/languages';
+import { CATALOG_CATEGORIES, resolveCatalogEntryMeta } from './engine/calculators';
 import { HomePage } from './pages/HomePage';
 import { CalculatorsDirectoryPage } from './pages/CalculatorsDirectoryPage';
 import { CalculatorDetailPage } from './pages/CalculatorDetailPage';
@@ -46,6 +47,16 @@ const LangGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return <NotFoundPage />;
   }
   return <>{children}</>;
+};
+
+const VALID_CATEGORY_IDS = new Set<string>(CATALOG_CATEGORIES.map((c) => c.id));
+
+const CategorySlugGuard: React.FC = () => {
+  const { category, slug } = useParams<{ category: string; slug: string }>();
+  if (category && slug && (VALID_CATEGORY_IDS.has(category) || resolveCatalogEntryMeta(slug))) {
+    return <CalculatorDetailPage />;
+  }
+  return <NotFoundPage />;
 };
 
 interface ErrorBoundaryState {
@@ -136,6 +147,7 @@ export default function App() {
               <Route path="/:lang/calculators" element={<LangGuard><CalculatorsDirectoryPage mode="all" /></LangGuard>} />
               <Route path="/:lang/:category" element={<LangGuard><CalculatorsDirectoryPage mode="categories" /></LangGuard>} />
               <Route path="/:lang/:category/:slug" element={<LangGuard><CalculatorDetailPage /></LangGuard>} />
+              <Route path="/:category/:slug" element={<CategorySlugGuard />} />
 
               <Route path="*" element={<NotFoundPage />} />
             </Routes>

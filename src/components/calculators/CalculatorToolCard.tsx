@@ -102,7 +102,7 @@ export const CalculatorToolCard: React.FC<CalculatorToolCardProps> = ({
   const palette = CARD_PALETTES[paletteIdx];
 
   const slug = item.slug || item.id || '';
-  const url = `/${activeLang}/${item.category}/${slug}`;
+  const url = activeLang === 'en' ? `/calculators/${slug}/` : `/${activeLang}/${item.category}/${slug}`;
   const formattedNumber =
     item.catalogNumber !== undefined
       ? `#${String(item.catalogNumber).padStart(4, '0')}`
