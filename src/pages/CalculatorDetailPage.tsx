@@ -24,6 +24,7 @@ import { buildCalculatorCanonical, buildCalculatorSeoMeta, SITE_ORIGIN } from '.
 import type { CalculatorDefinition, CalculatorResult } from '../engine/calculatorTypes';
 import { evaluateSafeFormula } from '../engine/safeMath';
 import { resolveCategoryTheme } from '../theme/pageThemes';
+import { isSupportedLanguage } from '../i18n/languages';
 import { useStudio } from '../context/StudioContext';
 import { DocumentHead } from '../components/seo/DocumentHead';
 import {
@@ -65,17 +66,19 @@ export const CalculatorDetailPage: React.FC = () => {
     t,
   } = useStudio();
 
-  const activeLang = lang || language || 'en';
+  const activeLang = lang && isSupportedLanguage(lang) ? lang : language || 'en';
+  const effectiveSlug = slug || (lang && !isSupportedLanguage(lang) ? lang : undefined);
   const [calc, setCalc] = useState<CalculatorDefinition | undefined>(undefined);
   const [loadingCalc, setLoadingCalc] = useState<boolean>(true);
+  const [focusMode, setFocusMode] = useState<boolean>(false);
 
   useEffect(() => {
     let cancelled = false;
-    if (!slug) {
+    if (!effectiveSlug) {
       setCalc(undefined);
       return;
     }
-    const imported = importedCalculators.find((ic) => ic.slug === slug);
+    const imported = importedCalculators.find((ic) => ic.slug === effectiveSlug);
     if (imported) {
       setCalc({
         id: imported.slug,
@@ -113,7 +116,7 @@ export const CalculatorDetailPage: React.FC = () => {
     }
 
     setLoadingCalc(true);
-    void resolveCalculatorBySlugAsync(slug)
+    void resolveCalculatorBySlugAsync(effectiveSlug)
       .then((loaded) => {
         if (!cancelled) {
           setCalc(loaded);
@@ -129,7 +132,7 @@ export const CalculatorDetailPage: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [slug, importedCalculators]);
+  }, [effectiveSlug, importedCalculators]);
 
   const isHidden = useMemo(() => {
     if (!calc) return false;
@@ -421,7 +424,7 @@ export const CalculatorDetailPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 transition-all ${focusMode ? 'mx-auto max-w-4xl py-2' : ''}`}>
       <DocumentHead
         title={seoMeta.title}
         description={seoMeta.description}
@@ -431,14 +434,19 @@ export const CalculatorDetailPage: React.FC = () => {
         jsonLd={schemaJsonLd}
       />
 
-      {/* Sticky Back, Close (x), Prev/Next & Instant Switcher */}
-      <QuickCalculatorBar calculator={calc} activeLang={activeLang} />
+      {/* Sticky Back, Close (x), Switcher, Language & Theme Bar */}
+      <QuickCalculatorBar
+        calculator={calc}
+        activeLang={activeLang}
+        isFocusMode={focusMode}
+        onToggleFocusMode={() => setFocusMode((prev) => !prev)}
+      />
 
       {/* Category-Themed Precision Header */}
       <CosmicEntrance>
         <LiquidGlassReveal className="card-3d overflow-hidden p-0">
-          <div className="h-1.5 w-full" style={{ background: categoryTheme.gradient }} />
-          <div className="flex flex-col justify-between gap-4 p-6 sm:flex-row sm:items-start">
+          <div className="h-2 w-full" style={{ background: categoryTheme.gradient }} />
+          <div className="flex flex-col justify-between gap-4 p-5 sm:p-6 sm:flex-row sm:items-start">
             <div>
               <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                 {calc.catalogNumber && (
@@ -477,14 +485,14 @@ export const CalculatorDetailPage: React.FC = () => {
             <button
               type="button"
               onClick={() => toggleFavorite(calc.id)}
-              className={`inline-flex min-h-[40px] items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-medium whitespace-nowrap shrink-0 transition ${
+              className={`inline-flex min-h-[44px] items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-medium active:scale-95 whitespace-nowrap shrink-0 transition ${
                 isFav
                   ? 'border-rose-500/40 bg-rose-500/10 text-rose-500'
                   : 'border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'
               }`}
             >
               <Heart className={`h-4 w-4 ${isFav ? 'fill-current' : ''}`} />
-              <span>{isFav ? 'Favorited' : 'Favorite'}</span>
+              <span>{isFav ? t('calc.favorited', 'Favorited') : t('calc.favorite', 'Favorite')}</span>
             </button>
           </div>
         </LiquidGlassReveal>
@@ -492,7 +500,7 @@ export const CalculatorDetailPage: React.FC = () => {
 
       {/* Main Precision Workspace */}
       <div className="grid gap-6 lg:grid-cols-12 items-start">
-        <LiquidGlassReveal className="card-3d p-6 lg:col-span-5 space-y-4">
+        <LiquidGlassReveal className="card-3d p-5 sm:p-6 lg:col-span-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200/70 pb-3 dark:border-slate-800">
             <h2 className="font-display text-base font-semibold">
               {t('calc.inputs', 'Input Parameters')}
@@ -569,7 +577,7 @@ export const CalculatorDetailPage: React.FC = () => {
           </div>
 
           {/* Direct Same-Category Quick Switcher inside Workspace */}
-          {categoryPeers.length > 0 && (
+          {!focusMode && categoryPeers.length > 0 && (
             <div className="border-t border-slate-200/70 pt-4 dark:border-slate-800">
               <div className="mb-2 flex items-center justify-between text-xs">
                 <span className="font-semibold text-slate-600 dark:text-slate-300">
@@ -587,7 +595,7 @@ export const CalculatorDetailPage: React.FC = () => {
                   <Link
                     key={peer.slug}
                     to={activeLang === 'en' ? `/calculators/${peer.slug}/` : `/${activeLang}/${peer.category}/${peer.slug}`}
-                    className="flex items-center justify-between gap-2 rounded-xl border border-slate-200/70 px-3 py-2 text-xs hover:bg-slate-100/70 dark:border-slate-800 dark:hover:bg-slate-800/60 transition"
+                    className="flex min-h-[42px] items-center justify-between gap-2 rounded-xl border border-slate-200/70 px-3 py-2 text-xs hover:bg-slate-100/70 dark:border-slate-800 dark:hover:bg-slate-800/60 transition"
                   >
                     <span className="truncate font-medium text-slate-800 dark:text-slate-200">
                       #{peer.catalogNumber} {peer.name}
@@ -639,73 +647,81 @@ export const CalculatorDetailPage: React.FC = () => {
           ) : result ? (
             <CalculatorResultReveal
               keyTrigger={`${calc.id}-${result.primary.formatted}`}
-              className="liquid-glass card-3d rounded-2xl p-6 space-y-5"
+              className="liquid-glass card-3d overflow-hidden rounded-2xl p-5 sm:p-6 space-y-5"
             >
-              {/* Precision Primary Result Readout */}
-              <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200/70 pb-4 dark:border-slate-800">
-                <div>
-                  <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                    {result.primary.label}
-                    <span aria-hidden="true"> · </span>
-                    {result.isApproximate ? 'Numerical Approximation' : 'Verified Deterministic Output'}
+              {/* Colorful Primary Result Readout Panel */}
+              <div
+                className="rounded-2xl border p-4 sm:p-5 space-y-4"
+                style={{
+                  borderColor: `${categoryTheme.primary}38`,
+                  background: `linear-gradient(135deg, ${categoryTheme.primary}14, ${categoryTheme.secondary}0d)`,
+                }}
+              >
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <div className="text-xs font-medium text-slate-600 dark:text-slate-300">
+                      {result.primary.label}
+                      <span aria-hidden="true"> · </span>
+                      {result.isApproximate ? 'Numerical Approximation' : t('calc.result', 'Verified Output')}
+                    </div>
+                    <div
+                      className="mt-1 font-display text-3xl font-bold tabular-nums sm:text-4xl"
+                      style={{ color: categoryTheme.primary }}
+                    >
+                      {result.primary.formatted}
+                    </div>
                   </div>
-                  <div
-                    className="mt-1 font-display text-3xl font-bold tabular-nums sm:text-4xl"
-                    style={{ color: categoryTheme.primary }}
-                  >
-                    {result.primary.formatted}
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={handleDownloadPdf}
+                      className="btn-3d inline-flex min-h-[44px] items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold text-white active:scale-95 whitespace-nowrap shrink-0 transition"
+                      style={{ background: categoryTheme.gradient }}
+                    >
+                      <FileDown className="h-4 w-4" />
+                      <span>{t('calc.downloadPdf', 'PDF Report')}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void handleCopy()}
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300/80 bg-white/70 px-3 py-2 text-xs font-medium hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-900/60 dark:hover:bg-slate-800 whitespace-nowrap shrink-0 transition"
+                    >
+                      {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
+                      <span>{copied ? 'Copied' : t('calc.copy', 'Copy')}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void handleShare()}
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300/80 bg-white/70 px-3 py-2 text-xs font-medium hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-900/60 dark:hover:bg-slate-800 whitespace-nowrap shrink-0 transition"
+                    >
+                      <Share2 className="h-4 w-4" />
+                      <span>{t('calc.share', 'Share')}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300/80 bg-white/70 px-3 py-2 text-xs font-medium hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-900/60 dark:hover:bg-slate-800 whitespace-nowrap shrink-0 transition"
+                    >
+                      <Bookmark className="h-4 w-4" />
+                      <span>{t('calc.save', 'Save')}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDownloadCsv}
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300/80 bg-white/70 px-3 py-2 text-xs font-medium hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-900/60 dark:hover:bg-slate-800 whitespace-nowrap shrink-0 transition"
+                    >
+                      <Download className="h-4 w-4" />
+                      <span>{t('calc.csv', 'CSV')}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleCreateReport}
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300/80 bg-white/70 px-3 py-2 text-xs font-medium hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-900/60 dark:hover:bg-slate-800 whitespace-nowrap shrink-0 transition"
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span>{t('calc.report', 'Report')}</span>
+                    </button>
                   </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={handleDownloadPdf}
-                    className="btn-3d inline-flex min-h-[38px] items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-xs font-semibold text-white whitespace-nowrap shrink-0"
-                    style={{ background: categoryTheme.gradient }}
-                  >
-                    <FileDown className="h-3.5 w-3.5" />
-                    <span>{t('calc.downloadPdf', 'PDF Report')}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void handleCopy()}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
-                  >
-                    {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
-                    <span>{copied ? 'Copied' : t('calc.copy', 'Copy')}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void handleShare()}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
-                  >
-                    <Share2 className="h-3.5 w-3.5" />
-                    <span>{t('calc.share', 'Share')}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleSave}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
-                  >
-                    <Bookmark className="h-3.5 w-3.5" />
-                    <span>{t('calc.save', 'Save')}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleDownloadCsv}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
-                  >
-                    <Download className="h-3.5 w-3.5" />
-                    <span>{t('calc.csv', 'CSV')}</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleCreateReport}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
-                  >
-                    <FileText className="h-3.5 w-3.5" />
-                    <span>{t('calc.report', 'Report')}</span>
-                  </button>
                 </div>
               </div>
 
@@ -794,35 +810,39 @@ export const CalculatorDetailPage: React.FC = () => {
           )}
 
           {/* Worked Example & FAQ */}
-          <LiquidGlassReveal className="p-5 space-y-3 text-xs">
-            <h2 className="font-display text-sm font-bold">Worked Example &amp; Quick FAQ</h2>
-            <p className="text-slate-600 dark:text-slate-300">
-              Using default parameters ({calc.inputs.map((i) => `${i.label}: ${i.defaultValue}`).join(', ')}),{' '}
-              {calc.name} deterministically computes{' '}
-              <strong>{result ? `${result.primary.label} = ${result.primary.formatted}` : 'live results'}</strong>.
-            </p>
-            <details className="rounded-xl border border-slate-200/70 p-3 dark:border-slate-800">
-              <summary className="cursor-pointer font-semibold">Can I switch tools without going back to Home?</summary>
-              <p className="mt-1.5 text-slate-600 dark:text-slate-400">
-                Yes. Use <strong>Switch Calculator (⌘K)</strong>, <strong>Prev/Next</strong>, or the <strong>More in {calc.categoryLabel}</strong> list right inside this view, or press <strong>← Back</strong> / <strong>× Close</strong> anytime.
-              </p>
-            </details>
-            <details className="rounded-xl border border-slate-200/70 p-3 dark:border-slate-800">
-              <summary className="cursor-pointer font-semibold">Does this work offline and support PDF export?</summary>
-              <p className="mt-1.5 text-slate-600 dark:text-slate-400">
-                {calc.toolKind === 'live-tool'
-                  ? 'Live DNS/WHOIS/SSL diagnostics require an active server connection and honestly show Service Unavailable offline.'
-                  : 'Yes! All mathematical, financial, scientific, and engineering formulas execute 100% locally in your browser with full PDF and CSV export.'}
-              </p>
-            </details>
-          </LiquidGlassReveal>
+          {!focusMode && (
+            <>
+              <LiquidGlassReveal className="p-5 space-y-3 text-xs">
+                <h2 className="font-display text-sm font-bold">Worked Example &amp; Quick FAQ</h2>
+                <p className="text-slate-600 dark:text-slate-300">
+                  Using default parameters ({calc.inputs.map((i) => `${i.label}: ${i.defaultValue}`).join(', ')}),{' '}
+                  {calc.name} deterministically computes{' '}
+                  <strong>{result ? `${result.primary.label} = ${result.primary.formatted}` : 'live results'}</strong>.
+                </p>
+                <details className="rounded-xl border border-slate-200/70 p-3 dark:border-slate-800">
+                  <summary className="cursor-pointer font-semibold">Can I switch tools without going back to Home?</summary>
+                  <p className="mt-1.5 text-slate-600 dark:text-slate-400">
+                    Yes. Use <strong>Switch Calculator (⌘K)</strong>, <strong>Prev/Next</strong>, or the <strong>More in {calc.categoryLabel}</strong> list right inside this view, or press <strong>← Back</strong> / <strong>× Close</strong> anytime.
+                  </p>
+                </details>
+                <details className="rounded-xl border border-slate-200/70 p-3 dark:border-slate-800">
+                  <summary className="cursor-pointer font-semibold">Does this work offline and support PDF export?</summary>
+                  <p className="mt-1.5 text-slate-600 dark:text-slate-400">
+                    {calc.toolKind === 'live-tool'
+                      ? 'Live DNS/WHOIS/SSL diagnostics require an active server connection and honestly show Service Unavailable offline.'
+                      : 'Yes! All mathematical, financial, scientific, and engineering formulas execute 100% locally in your browser with full PDF and CSV export.'}
+                  </p>
+                </details>
+              </LiquidGlassReveal>
 
-          <MonetagAdSlot placement="resultPromoCta" variant="compact" />
+              <MonetagAdSlot placement="resultPromoCta" variant="compact" />
+            </>
+          )}
         </div>
       </div>
 
       {/* Related Calculators */}
-      {related.length > 0 && (
+      {!focusMode && related.length > 0 && (
         <section>
           <h2 className="mb-3 font-display text-lg font-bold">{t('calc.related', 'Related Calculators')}</h2>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">

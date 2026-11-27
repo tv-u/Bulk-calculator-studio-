@@ -43,10 +43,14 @@ import {
 
 const LangGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { lang } = useParams<{ lang: string }>();
-  if (!lang || !isSupportedLanguage(lang)) {
-    return <NotFoundPage />;
+  if (!lang) return <NotFoundPage />;
+  if (isSupportedLanguage(lang)) {
+    return <>{children}</>;
   }
-  return <>{children}</>;
+  if (resolveCatalogEntryMeta(lang)) {
+    return <CalculatorDetailPage />;
+  }
+  return <NotFoundPage />;
 };
 
 const VALID_CATEGORY_IDS = new Set<string>(CATALOG_CATEGORIES.map((c) => c.id));

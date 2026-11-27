@@ -466,7 +466,309 @@ for (const item of supplemental) {
 }
 
 if (catalog.length !== 2600) {
-  throw new Error(`Expected exactly 2600 total catalog items, got ${catalog.length}`);
+  throw new Error(`Expected exactly 2600 base+supplemental catalog items, got ${catalog.length}`);
+}
+
+const US_STATES_RE = /\b(alabama|alaska|arizona|arkansas|california|colorado|connecticut|delaware|florida|georgia|hawaii|idaho|illinois|indiana|iowa|kansas|kentucky|louisiana|maine|maryland|massachusetts|michigan|minnesota|mississippi|missouri|montana|nebraska|nevada|new hampshire|new jersey|new mexico|new york|north carolina|north dakota|ohio|oklahoma|oregon|pennsylvania|rhode island|south carolina|south dakota|tennessee|texas|utah|vermont|virginia|washington|west virginia|wisconsin|wyoming)\b/;
+
+function classifyExtendedEntry(name) {
+  const n = name.toLowerCase();
+
+  // 1. Unit & Measurement Converters (strictly units, formats, currency denominations, culinary measures)
+  const UNIT_TO_UNIT_RE = /\b(converter|conversion|acreage|gaj|katha|bigha|cent to|ares to|nickels to|dimes to|pennies to|cents to|pence to|crore to|million to|billion to|number to|roman numeral|military time|cups to|tbsp to|tsp to|gallons to|quarts to|pints to|ounces to|oz to|grams to (cups|oz|lbs|kg|ml|fl|tsp|tbsp|calories)|gr to|g to|kg to|lbs to|ml to|cc to|liters to|mcg to|mg to|m to|meters to|feet to|foot to|inches to|in to|cm to|mm to|km to|miles to|yards to|knots to|mph to|kph to|m\/s to|psi to|bar to|kpa to|mpa to|atm to|torr to|mmhg to|pa to|ksi to|celsius|fahrenheit|kelvin|centigrade|watts to|dbm to|awg to|rem to px|px to|em to px|rgb to|hex to|hsl to|binary to|decimal to|fraction to|improper fraction to|mixed number to|hours to|days to|weeks to|minutes to|years to|stone to|pounds to|fluid ounces to|cubic feet to|cubic yards to|cubic meter to|cubic inches to|square feet to cubic|inches to fraction|inches to yard|inch to|inch lbs to|inch pounds to|nm to in|kilobytes to|mbps to|bytes to|lat long to|lumens to|lux to|hp to|kva to|wattage to|joules to|newton to|rms to|metric to|degree to|degrees to|radians to|pixels to|text to|lot size to)\b/;
+  const NOT_UNIT_CONVERTER_RE = /\b(cash conversion|marketing conversion|ev to sales|cash flow to|yield to|gross to net|net to gross|salary|wage|loan to|debt to|price to|cost to|buy to|rent to|return to|steps to|round to|greatest to least|least to greatest|general to standard|standard to general|cartesian to polar|polar to|rectangular to|standard form to|circumference to|diameter to|sat score|neet marks|credits needed|distance to horizon|acceleration due to|energy to wavelength|wavelength to|grams to moles|delta to wye|conductivity to resistivity|signal to noise|roof pitch to|amp to wire|compression ratio to|power-to-weight|oil to gas|rain to snow|bc to ad|miles to dollars|percent to goal|letters to numbers|numbers to letters|frames to timecode|timecode to frame)\b/;
+  if (UNIT_TO_UNIT_RE.test(n) && !NOT_UNIT_CONVERTER_RE.test(n)) {
+    let cat = 'daily-life';
+    let sub = 'Unit & Measurement Converters';
+    if (/(psi|bar|kpa|mpa|atm|torr|mmhg|ksi|watt|amp|volt|joule|dbm|awg|newton|torque|lumen|lux|radiation|poise|stokes|enthalpy|calorie|hp to|kva|rms)/.test(n)) {
+      cat = 'engineering';
+      sub = 'Engineering Unit Converters';
+    } else if (/(cup|tbsp|tsp|tablespoon|teaspoon|oz|pint|quart|gallon|gram|ml|cc to|gr to|cooking|butter|sugar)/.test(n)) {
+      cat = 'food';
+      sub = 'Culinary & Volume Converters';
+    } else if (/(byte|kb|mb|gb|tb|mbps|gbps|binary|hex|octal|ascii|unicode|text to|pixel|rem|px|css|rgb|hsl)/.test(n)) {
+      cat = 'technology';
+      sub = 'Digital, Color & CSS Converters';
+    } else if (/(cent|dollar|euro|pound|pence|penny|nickel|dime|crore|lakh|million|billion|currency)/.test(n)) {
+      cat = 'finance';
+      sub = 'Currency & Monetary Denomination Tools';
+    } else if (/(degree|radian|decimal to percent|fraction to|mixed number|improper fraction|angle)/.test(n)) {
+      cat = 'mathematics';
+      sub = 'Math Format & Angle Converters';
+    }
+    return {
+      category: cat,
+      subcategory: sub,
+      toolKind: 'converter',
+      safetyClass: 'standard',
+      solverFamily: 'extUnit',
+      solverKey: 'unit_extended',
+      longTail: 'exact NIST SI conversion factor with multi-unit table',
+    };
+  }
+
+  // 2. US State / Global Tax, Paycheck, Finance, Real Estate & Economics
+  if (
+    US_STATES_RE.test(n) ||
+    /\b(401k|403b|529|ira|roth|rmd|annuity|arm |mortgage|heloc|pmi|ltv|dscr|dti|arv|brrrr|ffo|affo|cap rate|grm|rent|lease|loan|emi|credit card|debt|tax|paycheck|salary|wage|overtime|bonus|dividend|stock|equity|wacc|capm|dcf|ebit|ebitda|eva|roic|roe|roa|ros|pe ratio|peg|graham number|altman z|dupont|gini|hhi|lerner|okun|phillips|taylor rule|money|bank|deposit|savings|cd |sinking fund|perpetuity|compound|interest|inflation|gdp|cpi|currency|forex|crypto|bitcoin|zakat|pag-ibig|elss|ssy|lumpsum|sip|valuation|margin|profit|markup|markdown|cogs|fifo|lifo|goodwill|amortization|refinance|escrow|earnest money|prorated|net worth|budget|50 30 20|70 20 10|28 36|3x rent|rule of 72|basis point|put call|black scholes|var |value at risk|beta|alpha|sharpe|sortino|treynor|jensen|ir35|paye|sdlt|lbtt|ltt|cgt|aus|uk |canada|ireland|nz |pakistan|philippines|uae gratuity|trump tariff|trump tax|fica|magi|agi|hsa vs ppo|s-corp|rsu|espp|macrs|ev to sales|free cash flow|cash flow to debt|yield to call|yield to maturity|gross to net|net to gross|miles to dollars|bond|xirr|afn|apc|avc|ear |ebt |emv |eps |coupon|actual cash value|cost of capital|economic value added|net present value|net income|operating income|retained earnings|market capitalization|residual income|capital gains|credit spread|effective duration|marginal cost|average fixed cost|deadweight loss|consumer surplus|price elasticity|unemployment|labor force|income percentile|fibonacci retracement|fisher equation|carry trade|forward rate|forward premium|cross exchange|discretionary income|disposable income|annual income|biweekly pay|semi monthly pay|weekly pay|pay raise|hours pay|post office monthly|working capital|accrual ratio|cash ratio|combined ratio|defensive interval|expense ratio|financial leverage|hedge ratio|loss ratio|operating cash|price to cash|price to earnings|reserve ratio|retention ratio|direct material price|days payable|average collection|year over year|sustainable growth|sell through|occupancy rate|investment fees|finance charge|blended rate|equivalent rate|cash conversion|appreciation|return on capital|lifetime earnings|monthly income|maturity value|optimal price|rate of return|real rate|home value|early retirement|discount rate|adr |cobb douglas|comparative advantage|expected utility|opportunity cost|price per share)\b/.test(n)
+  ) {
+    const isLegal = /\b(ir35|post judgment|alimony|child support|law|tax credit)\b/.test(n);
+    return {
+      category: isLegal ? 'legal' : 'finance',
+      subcategory: US_STATES_RE.test(n)
+        ? 'US State Tax, Property & Paycheck'
+        : /(mortgage|rent|arv|brrrr|ffo|affo|heloc|pmi|real estate|home|land loan|3x rent|28 36|adr )/.test(n)
+        ? 'Real Estate & Mortgage Modeling'
+        : /(401k|403b|529|ira|roth|rmd|annuity|retirement|pension|fire)/.test(n)
+        ? 'Retirement & Wealth Planning'
+        : /(tax|paycheck|salary|wage|overtime|bonus|fica|paye|sdlt|zakat|pay|income)/.test(n)
+        ? 'Income Tax, Payroll & Compliance'
+        : 'Corporate Finance, Valuation & Economics',
+      toolKind: 'calculator',
+      safetyClass: 'financial',
+      solverFamily: 'extFinance',
+      solverKey: 'finance_extended',
+      longTail: 'step by step financial formula with exact schedule',
+    };
+  }
+
+  // 3. Standardized Exams, Academic Scores & Education
+  if (
+    /\b(sat|act|psat|preact|ap |ib |gre|gmat|lsat|mcat|usmle|comlex|naplex|mpre|oat|dat|cfa|frm|pmp|comptia|aws|azure|ccna|ielts|toefl|duolingo|pte|celpip|hsk|jlpt|topik|dele|cambridge english|gpa|gwa|sgpa|cgpa|ects|ucas|atar|gaokao|hkdse|vce|baccalaureate|cbse|icse|isc|clat|neet|gate|cuet|nmat|nata|nift|amc 8|math kangaroo|regents|staar|ged|hiset|clep|praxis|ati teas|hesi|clt|accuplacer|aleks|tsi|pert|hspt|ssat|isee|shsat|cogat|map growth|star reading|star math|iready|lexile|grade|graduate|graduation|thesis|dissertation|capstone|homework|school|kindergarten|homeschool|honor roll|credit recovery|dual enrollment|common app|volunteer hours|research hours|field trip|class average|spelling test|math facts|reading|study|acceptance rate|course credit)\b/.test(n)
+  ) {
+    return {
+      category: 'education',
+      subcategory: 'Standardized Exams, GPA & Academic Planning',
+      toolKind: 'calculator',
+      safetyClass: 'standard',
+      solverFamily: 'extApplied',
+      solverKey: 'education_extended',
+      longTail: 'official exam scoring scale and percentile estimator',
+    };
+  }
+
+  // 4. Clinical / Health / Medical / Nutrition
+  if (
+    /\b(bmi|bmr|rmr|tdee|body fat|body adiposity|waist|calorie deficit|calorie surplus|nutrient|fiber|sodium|potassium|magnesium|calcium|iron|vitamin|caffeine|sugar|macronutrient|meal|recipe|food|baking|oven|flour|baker|dough|bread|pizza|cake|rice to water|pasta|meat cooking|coffee|espresso|tea|alcohol|pediatric|dose|gfr|egfr|anion gap|osmolar|osmolality|blood volume|arterial pressure|pulse pressure|heart rate|qtc|qt interval|oxygen|respiratory|pack year|sleep|hydration|cockcroft|fractional excretion|urine|proteinuria|albumin|kidney|cha2ds2|has bled|wells|cardiac|apache|sofa|glasgow|curb 65|meld|child pugh|nih stroke|framingham|ascvd|chads2|shock index|ejection|alveolar|water deficit|fluid maintenance|iv |infusion|drip|gestation|pregnancy|reconstitution|bra size|sunscreen)\b/.test(n)
+  ) {
+    const isFood = /\b(meal|recipe|food|baking|oven|flour|baker|dough|bread|pizza|cake|rice|pasta|meat|coffee|espresso|tea|catering|grocery|restaurant|sugar|butter|lemonade)\b/.test(n);
+    const isClinical = /\b(gfr|egfr|anion|osmolar|osmolality|qtc|qt |cha2ds2|has bled|wells|apache|sofa|glasgow|curb|meld|child pugh|nih stroke|framingham|ascvd|chads2|shock|ejection|alveolar|dose|infusion|drip|cockcroft|fractional|proteinuria|albumin|pediatric|sodium|potassium|magnesium|calcium|reconstitution|clinical)\b/.test(n);
+    return {
+      category: isFood ? 'food' : 'health',
+      subcategory: isFood
+        ? 'Culinary, Baking & Nutrition Ratios'
+        : isClinical
+        ? 'Clinical Medical Scoring & Dosing'
+        : 'Body Composition, Nutrition & Wellness',
+      toolKind: 'calculator',
+      safetyClass: isClinical ? 'clinical' : 'standard',
+      solverFamily: isFood ? 'extApplied' : isClinical ? 'extMathSci' : 'extApplied',
+      solverKey: isFood ? 'daily_applied' : isClinical ? 'clinical_extended' : 'health_sports_extended',
+      longTail: isFood ? 'exact culinary ratio and serving calculator' : 'validated clinical and health reference formula',
+    };
+  }
+
+  // 5. Sports & Athletics
+  if (
+    /\b(1rm|one-rep|531|bench press|wilks|pace|marathon|5k|10k|running|sprint|stride|steps to|walking|cycling|bike|biking|swimming|rowing|triathlon|vo2|nfl|passer rating|baseball|era|whip|fip|obp|slugging|war calculator|basketball|per |true shooting|efg|soccer|football|cricket|run rate|nrr|duckworth|tennis|golf|bowling|hockey|goalie|badminton|volleyball|ski|scuba|mma|boxing|hiking|jump rope|burpee|elliptical|stair|vertical leap|dunk|ape index|elo |winning percentage|earned run average|batting strike|power-to-weight)\b/.test(n)
+  ) {
+    return {
+      category: 'sports',
+      subcategory: 'Sports Analytics, Training & Pace',
+      toolKind: 'calculator',
+      safetyClass: 'standard',
+      solverFamily: 'extApplied',
+      solverKey: 'health_sports_extended',
+      longTail: 'sports performance metrics and training zone solver',
+    };
+  }
+
+  // 6. Construction, Architecture, Carpentry, HVAC & Landscaping
+  if (
+    /\b(concrete|cement|brick|block|mortar|grout|rebar|sonotube|footing|slab|pier|retaining wall|excavation|gravel|crushed stone|pea gravel|limestone|flagstone|paver|asphalt|driveway|patio|sidewalk|curb|lumber|board foot|plywood|joist|rafter|birdsmouth|collar tie|truss|purlin|gable|gambrel|roof|shingle|siding|soffit|fascia|gutter|drywall|gypsum|stud wall|framing|flooring|hardwood|laminate|carpet|tile|backsplash|wainscoting|crown molding|baseboard|shiplap|wallpaper|paint|primer|stain|epoxy|caulk|sealant|adhesive|stucco|insulation|r-value|u-value|vapor barrier|window|door|stair|baluster|spindle|railing|ada ramp|ramp|deck|fence|pergola|gazebo|carport|shed|sauna|porch|sunroom|basement|bathroom|kitchen|cabinet|closet|countertop|shower|bathtub|remodel|renovation|mulch|topsoil|granite|river rock|rip rap|sod|grass seed|artificial turf|lawn|landscape|pond|pool|drain|septic|dry well|sprinkler|irrigation|hvac|btu|ac |air conditioner|furnace|boiler|duct|cfm|fan|exhaust|ventilation|chiller|heat pump|tankless|water heater|bearing wall|accent wall|earthquake retrofit|elevation grade|fire pit|foundation|clearance hole|material removal|speeds and feeds)\b/.test(n)
+  ) {
+    return {
+      category: 'construction',
+      subcategory: 'Construction, Carpentry & Home Projects',
+      toolKind: 'calculator',
+      safetyClass: 'engineering',
+      solverFamily: 'extApplied',
+      solverKey: 'construction_extended',
+      longTail: 'accurate material takeoff and contractor estimator',
+    };
+  }
+
+  // 7. Automotive, Motorsports, EV & Aviation
+  if (
+    /\b(car|auto|vehicle|truck|rv |motorcycle|tire|wheel|rim|axle|brake|rotor|engine|horsepower|torque|displacement|compression|camshaft|piston|connecting rod|valve|exhaust|header|carburetor|injector|fuel|mpg|octane|ethanol|e85|turbo|supercharger|intercooler|nitrous|radiator|coolant|oil change|transmission|gear ratio|speedometer|quarter mile|0-60|0–60|drag|trap speed|towing|trailer|payload|gvwr|ev |hybrid|rideshare|carpool|parking|toll|lug nut|backspacing|wheelbase|track width|spring rate|coilover|ride height|downforce|aerodynamic|air-fuel|air fuel|bsfc|gap insurance|diesel vs|commute cost)\b/.test(n)
+  ) {
+    return {
+      category: 'automotive',
+      subcategory: 'Automotive Performance, EV & Ownership',
+      toolKind: 'calculator',
+      safetyClass: 'standard',
+      solverFamily: 'extApplied',
+      solverKey: 'automotive_extended',
+      longTail: 'exact automotive engineering and cost calculator',
+    };
+  }
+
+  // 8. Agriculture, Animals & Climate / Renewable
+  if (
+    /\b(crop|seed|fertilizer|urea|dap|potash|npk|soil|lime|grain|tractor|livestock|cattle|cow|goat|sheep|horse|chicken|poultry|egg|aquaculture|fish|rabbit|llama|rat cage|animal|gestation|solar|wind turbine|hydropower|biomass|biogas|hydrogen|fuel cell|carbon|greenhouse|co2|methane|rainfall|rainwater|rain to snow|snow|stormwater|watershed|dew point|wet bulb|humidity|frost|uv index|weather|climate|composting|plastic|recycling|footprint|tree|mowing)\b/.test(n)
+  ) {
+    const isAgr = /\b(crop|seed|fertilizer|urea|dap|potash|npk|soil|lime|grain|tractor|livestock|cattle|cow|goat|sheep|horse|chicken|poultry|egg|aquaculture|fish|rabbit|llama|rat cage|animal|gestation|mowing|fcr)\b/.test(n);
+    return {
+      category: isAgr ? 'agriculture' : 'science',
+      subcategory: isAgr ? 'Agriculture, Livestock & Agronomy' : 'Climate, Ecology & Renewable Energy',
+      toolKind: 'calculator',
+      safetyClass: 'standard',
+      solverFamily: 'extApplied',
+      solverKey: isAgr ? 'agri_env_extended' : 'climate_solar_extended',
+      longTail: 'verified field yield and sustainability formula',
+    };
+  }
+
+  // 9. Physics, Electronics, Optics, Mechanics, Chemistry & Astronomy
+  if (
+    /\b(ohm|volt|amp|watt|resistor|resistance|capacitor|capacitance|inductor|impedance|reactance|admittance|lm317|ne555|op amp|op-amp|mosfet|diode|transistor|rectifier|buck|boost|flyback|attenuator|pcb|wire|cable|breaker|fuse|transformer|inverter|ups|battery|led |antenna|fresnel|vswr|eirp|path loss|baud|modulation|crosstalk|thd|harmonic|snell|lens|mirror|refraction|brewster|diffraction|polarization|malus|force|velocity|acceleration|momentum|impulse|gravity|gravitational|kepler|orbit|escape velocity|rocket|delta v|hohmann|schwarzschild|black hole|hawking|redshift|hubble|drake|time dilation|length contraction|emc2|photoelectric|photon|de broglie|heisenberg|bohr|rydberg|planck|stefan|wien|blackbody|carnot|entropy|enthalpy|gibbs|heat|thermal|pendulum|harmonic motion|spring|hooke|suvat|kinematic|projectile|free fall|friction|torque|inertia|centripetal|coriolis|buoyancy|archimedes|bernoulli|reynolds|darcy|manning|weir|poiseuille|froude|mach|prandtl|nusselt|biot|knudsen|stress|strain|mohr|von mises|buckling|young|poisson|beam|shaft|brinell|vickers|rockwell|molar|molal|normality|mole|ph|poh|buffer|henderson|titration|stoichiometry|dilution|half-life|half life|decay|arrhenius|nernst|faraday|dna|rna|pcr|enzyme|hardy weinberg|punnett|earth curvature|reverberation|vibration|degree of unsaturation|hydrogen ion|intrinsic carrier|rate constant|calibration curve|earthquake|distance to horizon|wavelength|conductivity to resistivity|delta to wye|signal to noise)\b/.test(n)
+  ) {
+    const isSci = /\b(molar|molal|normality|mole|ph|poh|buffer|henderson|titration|stoichiometry|dilution|half-life|half life|decay|arrhenius|nernst|faraday|dna|rna|pcr|enzyme|hardy|punnett|schwarzschild|black hole|hawking|redshift|hubble|drake|kepler|orbit|planet|moon|eclipse|sidereal|julian|parsec|light year|astronom|star|telescope|exoplanet|bohr|rydberg|de broglie|heisenberg|photoelectric|coulomb|gauss|faraday|earth curvature|degree of unsaturation|hydrogen ion|rate constant|calibration curve|earthquake|distance to horizon)\b/.test(n);
+    return {
+      category: isSci ? 'science' : 'engineering',
+      subcategory: isSci ? 'Physics, Chemistry & Astrophysics' : 'Electrical, Mechanical & Fluid Engineering',
+      toolKind: 'calculator',
+      safetyClass: 'engineering',
+      solverFamily: 'extMathSci',
+      solverKey: 'physics_sci_extended',
+      longTail: 'exact scientific formula with SI unit derivation',
+    };
+  }
+
+  // 10. Mathematics, Geometry, Trigonometry, Number Theory, Matrix & Statistics
+  if (
+    /\b(triangle|circle|sphere|hemisphere|cone|cylinder|cube|cuboid|pyramid|prism|frustum|torus|ellipsoid|tetrahedron|octahedron|dodecahedron|icosahedron|polyhedron|polygon|pentagon|hexagon|heptagon|octagon|decagon|dodecagon|rectangle|square|parallelogram|rhombus|trapezoid|kite|crescent|ellipse|parabola|hyperbola|conic|arc|chord|sector|semicircle|quarter circle|perimeter|area|volume|surface area|circumference|radius|diameter|diagonal|slant height|hypotenuse|pythagor|heron|angle|sin|cos|tan|cot|sec|csc|sinh|cosh|tanh|arcsin|arccos|arctan|trigonomet|trig |vector|matrix|determinant|eigen|svd|cholesky|qr |lu |gauss|cramer|adjoint|cofactor|null space|tensor|slope|midpoint|distance|coordinate|centroid|circumcenter|incenter|orthocenter|latus rectum|fraction|decimal|percent|ratio|proportion|prime|modulo|modulus|modular|fibonacci|lucas|catalan|bell number|stirling|partition|collatz|totient|carmichael|divisor|perfect number|amicable|abundant|deficient|euclidean|gcd|gcf|lcm|lcd|factorial|exponent|power|root|log|antilog|polynomial|quadratic|cubic|linear|equation|inequality|foil|trinomial|binomial|completing the square|discriminant|synthetic division|variance|standard deviation|mean|median|mode|range|iqr|quartile|decile|percentile|z-score|z score|t-test|t test|t statistic|z test|chi-square|chi square|anova|f-distribution|f distribution|f statistic|p-value|p value|p-hat|confidence interval|margin of error|cohen|mann-whitney|mcnemar|pearson|spearman|regression|r squared|skewness|kurtosis|histogram|box plot|dot plot|stem-and-leaf|five number|five-number|outlier|tukey|probability|bayes|permutation|combination|dice|coin|odds|paradox|benford|monty hall|birthday|two envelopes|prisoners dilemma|pascals triangle|venn|truth table|set builder|union intersection|sig fig|significant|rounding|round to|order from|ordering|least to greatest|greatest to least|ascending|consecutive integers|place value|expanded form|number sequence|series|arithmetic|geometric|harmonic|rsa|luhn|interpolation|critical value|endpoint calculator|counting principle|binary operations|rational zeros|rationalize|singular values|rate of change)\b/.test(n)
+  ) {
+    return {
+      category: 'mathematics',
+      subcategory: /(triangle|circle|sphere|cone|cylinder|cube|pyramid|prism|torus|polygon|pentagon|hexagon|octagon|ellipse|parabola|hyperbola|angle|sin|cos|tan|area|volume|perimeter)/.test(n)
+        ? 'Geometry, 3D Solids & Trigonometry'
+        : /(variance|deviation|mean|median|iqr|quartile|regression|p-value|chi|anova|probability|dice|coin|odds|paradox|bayes|sample size|confidence)/.test(n)
+        ? 'Statistics, Probability & Data Science'
+        : 'Algebra, Matrices & Number Theory',
+      toolKind: 'calculator',
+      safetyClass: 'standard',
+      solverFamily: 'extMathSci',
+      solverKey: 'math_extended',
+      longTail: 'step by step mathematical proof and exact answer',
+    };
+  }
+
+  // 11. Technology, Computing, Ciphers, Text Tools, Media & Gaming
+  if (
+    /\b(binary|hex|octal|base64|cipher|vigenere|caesar|morse|ascii|unicode|utf|chmod|parity|hamming|checksum|crc|hmac|hash|jwt|uuid|guid|cron|unix|epoch|regex|json|xml|html|url|slug|token|llm|cpu|ram|server|amdahl|big o|algorithm|database|sql|subnet|cidr|ipv4|ipv6|vlsm|supernet|wildcard|bandwidth|throughput|latency|jitter|packet|wifi|poe|storage|bitrate|video|audio|fps|frame|timecode|slow motion|time lapse|camera|exposure|shutter|aperture|iso|depth of field|hyperfocal|focal length|crop factor|dpi|ppi|pixel|resolution|aspect ratio|projector|tv |screen|bold text|italic|strikethrough|underline|subscript|superscript|small caps|small text|upside down|mirror text|reverse text|title case|sentence case|uppercase|lowercase|cursive|gothic|glitch|wingdings|leet|pig latin|nato phonetic|gematria|minecraft|nether|end portal|pokemon|among us|dnd|5e|encounter|point buy|hit points|edpi|kd |raid|rust decay|bpm|chord|semitone|fret|music|vocal|note frequency|key signature|guitar|delay reverb|speaker box)\b/.test(n)
+  ) {
+    return {
+      category: 'technology',
+      subcategory: /(bold|italic|strikethrough|underline|subscript|superscript|small|upside|mirror|reverse|case|cursive|gothic|glitch|wingdings|leet|pig latin|nato|gematria|cipher|vigenere|caesar|morse)/.test(n)
+        ? 'Text Styling, Ciphers & Encoding Tools'
+        : /(minecraft|pokemon|among us|5e|edpi|kd|raid|rust|hit points)/.test(n)
+        ? 'Gaming & Simulation Calculators'
+        : 'Computing, AI Tokens, Networking & Media',
+      toolKind: 'calculator',
+      safetyClass: 'standard',
+      solverFamily: 'extApplied',
+      solverKey: 'tech_media_extended',
+      longTail: 'instant interactive online utility with zero signup',
+    };
+  }
+
+  // 12. Business, Marketing, Operations & Manufacturing
+  if (
+    /\b(business|marketing|roi|roas|cpc|cpm|cpa|cpl|ctr|cac|ltv|cltv|churn|nps|net promoter|retention|attrition|turnover|absen|bradford|dart rate|trir|oee|takt|cycle time|lead time|throughput|wip|cp |cpk|pp |ppk|eoq|reorder|safety stock|inventory|fifo|lifo|merchandise|shopify|amazon|ebay|etsy|flipkart|meesho|woocommerce|stripe|paypal|razorpay|upi|cod|shipping|freight|cbm|pallet|container|truck|fleet|route|landed cost|customs|incoterms|warehouse|supply chain|demand|man hours|billable|bill rate|consulting|freelance|employee|payroll|hr |recruitment|time to hire|compa ratio|severance|notice period|breakeven|break even|break-even|startup|runway|burndown|pert|dpmo|seo|serp|adsense|youtube|instagram|facebook|tiktok|influencer|affiliate|commission|revenue|sales|wholesale|retail|bundle|subscription|mrr|arr|meeting|cost of doing business)\b/.test(n)
+  ) {
+    return {
+      category: 'business',
+      subcategory: 'Business Operations, Marketing & Logistics',
+      toolKind: 'calculator',
+      safetyClass: 'financial',
+      solverFamily: 'extFinance',
+      solverKey: 'business_extended',
+      longTail: 'enterprise KPI calculation and margin breakdown',
+    };
+  }
+
+  // 13. Daily Life, Dates, Apparel Sizes, Crafts & General
+  return {
+    category: 'daily-life',
+    subcategory: 'Everyday, Lifestyle, Sizes & Time Utilities',
+    toolKind: 'calculator',
+    safetyClass: 'standard',
+    solverFamily: 'extApplied',
+    solverKey: 'daily_applied',
+    longTail: 'fast mobile friendly everyday calculation online',
+  };
+}
+
+const PASTE_27_FILE = path.join(ROOT, 'public/assets/aistudio/Paste_November_27__2026_-_7_48PM_d322feb6');
+if (fs.existsSync(PASTE_27_FILE)) {
+  const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  const raw27 = fs.readFileSync(PASTE_27_FILE, 'utf8');
+  const lines27 = raw27
+    .split(/\r?\n/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .filter((s) => !s.startsWith('In sabi') && !s.startsWith('Primum '));
+
+  const existingNorms = new Set(catalog.map((c) => norm(c.name)));
+  const existingSlugs = new Set(catalog.map((c) => c.slug));
+  const seenPasteNorms = new Set();
+  const seenPasteSlugs = new Set();
+
+  for (const rawName of lines27) {
+    const cleanName = rawName.replace(/\s+/g, ' ').trim();
+    const nNorm = norm(cleanName);
+    const baseSlug = slugify(cleanName);
+    if (!baseSlug) continue;
+    if (existingNorms.has(nNorm) || existingSlugs.has(baseSlug)) continue;
+    if (seenPasteNorms.has(nNorm) || seenPasteSlugs.has(baseSlug)) continue;
+
+    seenPasteNorms.add(nNorm);
+    seenPasteSlugs.add(baseSlug);
+
+    const num = catalog.length + 1;
+    let slug = baseSlug;
+    if (slugCounts.has(slug)) {
+      slug = `${baseSlug}-${num}`;
+    }
+    slugCounts.set(slug, (slugCounts.get(slug) || 0) + 1);
+    existingNorms.add(nNorm);
+    existingSlugs.add(slug);
+
+    const meta = classifyExtendedEntry(cleanName);
+    catalog.push({
+      catalogNumber: num,
+      id: slug,
+      slug,
+      name: cleanName,
+      partNumber: 52 + Math.floor((num - 2601) / 100),
+      subcategory: meta.subcategory,
+      category: meta.category,
+      categoryLabel: CATEGORY_LABELS[meta.category] || meta.category,
+      toolKind: meta.toolKind,
+      safetyClass: meta.safetyClass,
+      solverFamily: meta.solverFamily,
+      solverKey: meta.solverKey,
+      canonicalSlug: slug,
+      isDuplicateName: false,
+      status: 'validated',
+      longTail: meta.longTail,
+    });
+  }
+}
+
+if (catalog.length < 5700) {
+  throw new Error(`Expected >= 5700 total catalog items after extended paste merge, got ${catalog.length}`);
 }
 
 fs.mkdirSync(path.join(ROOT, 'public/reports'), { recursive: true });

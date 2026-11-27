@@ -15,6 +15,10 @@ import { buildConstructionAgriDefinition } from './solvers/constructionAgriSolve
 import { buildBusinessAndDailyDefinition } from './solvers/businessAndDailySolver';
 import { buildTechNetDefinition } from './solvers/techNetSolver';
 import { buildExactToolDefinition } from './solvers/exactToolSolvers';
+import { buildExtendedUnitDefinition } from './solvers/extendedUnitSolver';
+import { buildExtendedFinanceDefinition } from './solvers/extendedFinanceTaxSolver';
+import { buildExtendedMathScienceDefinition } from './solvers/extendedMathScienceSolver';
+import { buildExtendedAppliedDefinition } from './solvers/extendedAppliedToolsSolver';
 
 export { CATALOG_2500 };
 
@@ -34,6 +38,14 @@ export function resolveCalculatorSync(slugOrId: string): CalculatorDefinition | 
     }
     case 'unit':
       return buildUnitVariantDefinition(entry);
+    case 'extUnit':
+      return attachCatalogMeta(buildExtendedUnitDefinition(entry), entry);
+    case 'extFinance':
+      return attachCatalogMeta(buildExtendedFinanceDefinition(entry), entry);
+    case 'extMathSci':
+      return attachCatalogMeta(buildExtendedMathScienceDefinition(entry), entry);
+    case 'extApplied':
+      return attachCatalogMeta(buildExtendedAppliedDefinition(entry), entry);
     case 'finance':
       return attachCatalogMeta(buildFinanceDefinition(entry), entry);
     case 'math':

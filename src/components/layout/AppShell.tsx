@@ -35,6 +35,7 @@ import {
 import { THEME_PRESETS, useStudio } from '../../context/StudioContext';
 import { resolvePageTheme } from '../../theme/pageThemes';
 import { SUPPORTED_LANGUAGES, isSupportedLanguage } from '../../i18n/languages';
+import { CATALOG_2500, CATALOG_CATEGORIES, resolveCatalogEntryMeta } from '../../engine/calculators';
 import { BrandLogoMark } from '../brand/BrandLogo';
 import { CosmicBackground } from '../background/CosmicBackground';
 import { CrystalModal } from '../motion/MotionLibrary';
@@ -43,13 +44,15 @@ import { SmartSearch } from '../search/SmartSearch';
 import { OfflineIndicator, PWAInstallButton } from '../pwa/PWAComponents';
 import { MonetagAdSlot } from '../ads/MonetagAdSlot';
 
+const VALID_CATEGORY_IDS = new Set<string>(CATALOG_CATEGORIES.map((c) => c.id));
+
 const SIDEBAR_GROUPS = [
   {
     title: 'Core Workspace',
     items: [
       { to: '/', labelKey: 'nav.home', label: 'Home', icon: Home },
       { to: '/dashboard', labelKey: 'nav.dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { to: '/calculators', labelKey: 'nav.calculators', label: 'All 2,600 Calculators', icon: Calculator },
+      { to: '/calculators', labelKey: 'nav.calculators', label: 'All 5,729 Calculators', icon: Calculator },
       { to: '/categories', labelKey: 'nav.categories', label: '15 Categories', icon: Compass },
     ],
   },
@@ -111,6 +114,12 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
     const parts = location.pathname.split('/').filter(Boolean);
     if (parts.length === 2 && parts[0] === 'calculators') return true;
     if (parts.length === 3 && isSupportedLanguage(parts[0])) return true;
+    if (parts.length === 2 && VALID_CATEGORY_IDS.has(parts[0]) && Boolean(resolveCatalogEntryMeta(parts[1]))) {
+      return true;
+    }
+    if (parts.length === 1 && !isSupportedLanguage(parts[0]) && Boolean(resolveCatalogEntryMeta(parts[0]))) {
+      return true;
+    }
     return false;
   }, [location.pathname]);
 
@@ -389,7 +398,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
                   <span className="font-display text-base font-bold">BULK CALCULATOR STUDIO</span>
                 </div>
                 <p className="max-w-sm text-sm text-slate-600 dark:text-slate-400">
-                  2,600 verified calculators across 15 domains and 50 languages. Precision math, finance, engineering, live network tools, and bulk CSV automation.
+                  {CATALOG_2500.length.toLocaleString()} verified calculators across 15 domains and 50 languages. Precision math, finance, engineering, live network tools, and bulk CSV automation.
                 </p>
                 <div className="flex flex-wrap items-center gap-3">
                   <PWAInstallButton />
@@ -452,7 +461,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
             </div>
 
             <div className="flex flex-col items-start justify-between gap-3 border-t border-slate-200/70 pt-6 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400 sm:flex-row sm:items-center">
-              <p>© {new Date().getFullYear()} BULK CALCULATOR STUDIO. All 2,600 deterministic engines verified.</p>
+              <p>© {new Date().getFullYear()} BULK CALCULATOR STUDIO. All {CATALOG_2500.length.toLocaleString()} deterministic engines verified.</p>
               <div className="flex items-center gap-4">
                 <Link to="/categories" className="hover:underline">Categories</Link>
                 <Link to="/formula-library" className="hover:underline">Formula Library</Link>
@@ -468,13 +477,13 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
       {!isCalculatorDetailView && (
         <nav
           aria-label="Mobile quick navigation"
-          className="fixed bottom-0 left-0 right-0 z-40 grid h-14 grid-cols-5 border-t border-slate-200/80 bg-white/92 backdrop-blur-md pb-safe dark:border-slate-800/80 dark:bg-slate-950/92 lg:hidden"
+          className="fixed bottom-0 left-0 right-0 z-40 grid h-16 grid-cols-5 border-t border-slate-200/80 bg-white/95 backdrop-blur-md pb-safe dark:border-slate-800/80 dark:bg-slate-950/95 lg:hidden"
         >
           {[
-            { to: '/', label: 'Home', icon: Home },
-            { to: '/calculators', label: '2,600', icon: Calculator },
-            { to: '/bulk-calculator', label: 'Bulk', icon: FileSpreadsheet },
-            { to: '/dashboard', label: 'Dash', icon: LayoutDashboard },
+            { to: '/', label: t('nav.home', 'Home'), icon: Home },
+            { to: '/calculators', label: CATALOG_2500.length.toLocaleString(), icon: Calculator },
+            { to: '/bulk-calculator', label: t('nav.bulk', 'Bulk'), icon: FileSpreadsheet },
+            { to: '/dashboard', label: t('nav.dashboard', 'Dash'), icon: LayoutDashboard },
           ].map((tab) => {
             const Icon = tab.icon;
             return (
@@ -483,23 +492,35 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
                 to={tab.to}
                 end={tab.to === '/'}
                 className={({ isActive }) =>
-                  `flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium ${
+                  `flex min-h-[44px] flex-col items-center justify-center gap-0.5 text-[10px] font-semibold transition-transform active:scale-95 ${
                     isActive ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400'
                   }`
                 }
               >
-                <Icon className="h-5 w-5" />
-                <span>{tab.label}</span>
+                {({ isActive }) => (
+                  <>
+                    <span
+                      className={`flex h-7 w-11 items-center justify-center rounded-full transition-colors ${
+                        isActive ? 'bg-blue-500/15 dark:bg-blue-500/25' : ''
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <span className="truncate max-w-[64px]">{tab.label}</span>
+                  </>
+                )}
               </NavLink>
             );
           })}
           <button
             type="button"
             onClick={() => setLightStudioOpen(true)}
-            className="flex flex-col items-center justify-center gap-0.5 text-[10px] font-medium text-slate-500 dark:text-slate-400"
+            className="flex min-h-[44px] flex-col items-center justify-center gap-0.5 text-[10px] font-semibold text-slate-500 active:scale-95 transition-transform dark:text-slate-400"
           >
-            <Sliders className="h-5 w-5" />
-            <span>Light</span>
+            <span className="flex h-7 w-11 items-center justify-center rounded-full">
+              <Sliders className="h-4 w-4" />
+            </span>
+            <span className="truncate max-w-[64px]">{t('nav.lightStudio', 'Theme')}</span>
           </button>
         </nav>
       )}
@@ -584,7 +605,7 @@ export const AppShell: React.FC<{ children: React.ReactNode }> = ({ children }) 
       <CrystalModal
         open={mobileSearchOpen}
         onClose={() => setMobileSearchOpen(false)}
-        title="Smart 2,600-Calculator Search"
+        title={`Smart ${CATALOG_2500.length.toLocaleString()}-Calculator Search`}
         maxWidth="max-w-2xl"
       >
         <div className="min-h-[320px]">

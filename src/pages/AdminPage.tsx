@@ -324,7 +324,7 @@ export const AdminPage: React.FC = () => {
     <div className="space-y-6">
       <DocumentHead
         title="Admin Control Center v2.0 – BULK CALCULATOR STUDIO"
-        description="Protected admin management for 2,500 calculators, Monetag Smart Link ads, Bulk CSV/JSON Importer, 50-language audit, and regression testing."
+        description={`Protected admin management for ${CATALOG_2500.length.toLocaleString()} calculators, Monetag Smart Link ads, Bulk CSV/JSON Importer, 50-language audit, and regression testing.`}
         noIndex
       />
 
@@ -357,7 +357,7 @@ export const AdminPage: React.FC = () => {
           </div>
           <p className="text-xs text-slate-600 dark:text-slate-400">
             {authStatus?.configured
-              ? 'Enter your configured admin passcode to unlock Monetag revenue controls, 2,500 catalog management, and bulk importer.'
+              ? `Enter your configured admin passcode to unlock Monetag revenue controls, ${CATALOG_2500.length.toLocaleString()} catalog management, and bulk importer.`
               : 'No ADMIN_PASSCODE environment secret is set yet. Create an admin passcode (min 8 chars) to lock and claim this console.'}
           </p>
           <form onSubmit={(e) => void handleAuthSubmit(e)} className="space-y-3">
@@ -383,10 +383,10 @@ export const AdminPage: React.FC = () => {
             {(
               [
                 ['monetag', 'Monetag Revenue & Ads'],
-                ['catalog', `2,500 Catalog (${CATALOG_2500.length - overview.unpublishedCalculators.length} Live)`],
+                ['catalog', `${CATALOG_2500.length.toLocaleString()} Catalog (${CATALOG_2500.length - overview.unpublishedCalculators.length} Live)`],
                 ['importer', `Bulk Importer (${overview.importedCalculators.length})`],
                 ['i18n', '50-Language Coverage'],
-                ['tests', '2,500 Regression Runner'],
+                ['tests', `${CATALOG_2500.length.toLocaleString()} Regression Runner`],
               ] as const
             ).map(([tabKey, tabLabel]) => (
               <button
@@ -523,7 +523,7 @@ export const AdminPage: React.FC = () => {
             <LiquidGlassReveal className="p-6 space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <h2 className="font-display text-lg font-bold">
-                  2,500 Master Catalog ({CATALOG_2500.length - overview.unpublishedCalculators.length} / {CATALOG_2500.length} Published)
+                  {CATALOG_2500.length.toLocaleString()} Master Catalog ({CATALOG_2500.length - overview.unpublishedCalculators.length} / {CATALOG_2500.length} Published)
                 </h2>
                 <div className="relative w-full sm:w-72">
                   <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -531,7 +531,7 @@ export const AdminPage: React.FC = () => {
                     type="search"
                     value={catQuery}
                     onChange={(e) => setCatQuery(e.target.value)}
-                    placeholder="Filter 2,500 tools (showing top 60)..."
+                    placeholder={`Filter ${CATALOG_2500.length.toLocaleString()} tools (showing top 60)...`}
                     className="w-full rounded-xl border border-slate-300 bg-white py-2 ps-9 pe-3 text-xs dark:border-slate-700 dark:bg-slate-900"
                   />
                 </div>
@@ -635,13 +635,13 @@ export const AdminPage: React.FC = () => {
             <LiquidGlassReveal className="p-6 space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <h2 className="font-display text-lg font-bold">2,500-Calculator Regression Test Runner</h2>
+                  <h2 className="font-display text-lg font-bold">{CATALOG_2500.length.toLocaleString()}-Calculator Regression Test Runner</h2>
                   <p className="text-xs text-slate-500">
-                    Executes resolveCalculatorSync + compute(defaults) against all 2,500 catalog calculators in real time.
+                    Executes resolveCalculatorSync + compute(defaults) against all {CATALOG_2500.length.toLocaleString()} catalog calculators in real time.
                   </p>
                 </div>
                 <MagneticButton variant="primary" onClick={() => void handleRunRegressionSample()}>
-                  <Play className="h-4 w-4" /> Run Full 2,500 Suite Now
+                  <Play className="h-4 w-4" /> Run Full {CATALOG_2500.length.toLocaleString()} Suite Now
                 </MagneticButton>
               </div>
               {testResults && (

@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { buildSearchIndex, searchRegistry } from '../src/engine/searchEngine';
 
-describe('Smart 2,600-Calculator Live Search Engine', () => {
+describe('Smart 5,729-Calculator Live Search Engine', () => {
   const index = buildSearchIndex([], [], 'en');
 
-  it('indexes all 2,600+ calculators and studio destinations', () => {
-    expect(index.length).toBeGreaterThanOrEqual(2610);
+  it('indexes all 5,729+ calculators and studio destinations', () => {
+    expect(index.length).toBeGreaterThanOrEqual(5735);
   });
 
-  it('ranks exact, prefix, and keyword matches accurately across 2,600 tools', () => {
+  it('ranks exact, prefix, and keyword matches accurately across 5,729 tools', () => {
     const emiMatches = searchRegistry('emi', index);
     expect(emiMatches[0].item.id).toBe('emi-calculator');
     expect(emiMatches[0].item.route).toBe('/calculators/emi-calculator/');
@@ -21,6 +21,11 @@ describe('Smart 2,600-Calculator Live Search Engine', () => {
 
     const numMatch = searchRegistry('#1', index);
     expect(numMatch[0].item.id).toBe('emi-calculator');
+
+    expect(searchRegistry('altman z', index).some((m) => m.item.id === 'altman-z-score-calculator')).toBe(true);
+    expect(searchRegistry('alabama paycheck', index).some((m) => m.item.id === 'alabama-paycheck-calculator')).toBe(true);
+    expect(searchRegistry('lm317', index).some((m) => m.item.id === 'lm317-calculator')).toBe(true);
+    expect(searchRegistry('minecraft circle', index).some((m) => m.item.id === 'minecraft-circle-calculator')).toBe(true);
   });
 
   it('resolves natural synonyms & Hindi transliteration terms (byaj, kist, zameen)', () => {

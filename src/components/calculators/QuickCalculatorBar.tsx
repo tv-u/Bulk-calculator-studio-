@@ -1,40 +1,55 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   ArrowRight,
   Calculator,
   ChevronLeft,
   ChevronRight,
+  Globe,
   Layers,
   Maximize2,
   Minimize2,
+  Moon,
   Search,
-  Target,
+  Sun,
   X,
 } from 'lucide-react';
 import { CATALOG_2500, CATALOG_CATEGORIES } from '../../engine/calculators';
 import type { CalculatorDefinition } from '../../engine/calculatorTypes';
 import { resolveCategoryTheme } from '../../theme/pageThemes';
-import { useStudio } from '../../context/StudioContext';
+import { THEME_PRESETS, useStudio } from '../../context/StudioContext';
+import { SUPPORTED_LANGUAGES, isSupportedLanguage } from '../../i18n/languages';
 
 interface QuickCalculatorBarProps {
   calculator: CalculatorDefinition;
   activeLang: string;
+  isFocusMode: boolean;
+  onToggleFocusMode: () => void;
 }
 
 export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
   calculator,
   activeLang,
+  isFocusMode,
+  onToggleFocusMode,
 }) => {
   const navigate = useNavigate();
-  const { unpublishedCalculators, t } = useStudio();
+  const location = useLocation();
+  const {
+    unpublishedCalculators,
+    language,
+    setLanguage,
+    light,
+    applyThemePreset,
+    t,
+  } = useStudio();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [isFocusMode, setIsFocusMode] = useState(false);
   const [drawerCategory, setDrawerCategory] = useState<string>(calculator.category);
   const [drawerQuery, setDrawerQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
+  const isDark = THEME_PRESETS[light.theme]?.isDark ?? true;
   const hiddenSet = useMemo(() => new Set(unpublishedCalculators), [unpublishedCalculators]);
 
   // Siblings in current category for instant Prev/Next switching without leaving workspace
@@ -57,7 +72,6 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
       ? categoryItems[currentIdx + 1]
       : undefined;
 
-  // Reset drawer filter to current calculator's category whenever opened
   useEffect(() => {
     if (drawerOpen) {
       setDrawerCategory(calculator.category);
@@ -66,7 +80,6 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
     }
   }, [drawerOpen, calculator.category]);
 
-  // Keyboard shortcut: Escape closes drawer; Ctrl+K / Cmd+K opens quick switcher
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -86,16 +99,6 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
       if (hiddenSet.has(c.slug)) return false;
       if (!q && drawerCategory !== 'all' && c.category !== drawerCategory) return false;
       if (q) {
-        if (drawerCategory !== 'all' && c.category !== drawerCategory) {
-          // When user types a query, search across all categories if none match or keep filter?
-          // Search across all categories when typing so users can jump anywhere instantly!
-          return (
-            c.name.toLowerCase().includes(q) ||
-            c.subcategory.toLowerCase().includes(q) ||
-            c.slug.includes(q) ||
-            `#${c.catalogNumber}` === q
-          );
-        }
         return (
           c.name.toLowerCase().includes(q) ||
           c.subcategory.toLowerCase().includes(q) ||
@@ -120,30 +123,39 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
     navigate(`/${activeLang}/${calculator.category}`);
   };
 
+  const handleLanguageChange = (nextLang: string) => {
+    setLanguage(nextLang);
+    const segs = location.pathname.split('/').filter(Boolean);
+    if (segs.length >= 1 && isSupportedLanguage(segs[0])) {
+      segs[0] = nextLang;
+      navigate(`/${segs.join('/')}${location.search}`);
+    }
+  };
+
   const currentTheme = resolveCategoryTheme(calculator.category);
 
   return (
     <>
-      {/* Persistent Sticky In-Calculator Control Dock */}
-      <div className="liquid-glass sticky top-16 z-30 flex flex-wrap items-center justify-between gap-2.5 rounded-2xl px-3.5 py-2.5 shadow-lg">
+      {/* Sticky Top Control Bar inside Full-Screen Calculator Workspace */}
+      <div className="liquid-glass sticky top-0 z-40 flex flex-wrap items-center justify-between gap-2 rounded-2xl px-3 py-2.5 shadow-lg">
         <div className="flex flex-wrap items-center gap-2 min-w-0">
           <button
             type="button"
             onClick={handleBack}
-            className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-slate-300/80 bg-white/80 px-3 py-1.5 text-xs font-semibold text-slate-800 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-100 dark:hover:bg-slate-800 whitespace-nowrap shrink-0 transition"
-            title="Go back to previous page"
+            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-300/80 bg-white/85 px-3 py-2 text-xs font-semibold text-slate-800 hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-900/85 dark:text-slate-100 dark:hover:bg-slate-800 whitespace-nowrap shrink-0 transition"
+            title="Go back to calculator listing"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
+            <ArrowLeft className="h-4 w-4" />
             <span>{t('calc.back', 'Back')}</span>
           </button>
 
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}
-            className="btn-3d inline-flex min-h-[38px] items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold text-white whitespace-nowrap shrink-0 transition"
+            className="btn-3d inline-flex min-h-[44px] items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold text-white active:scale-95 whitespace-nowrap shrink-0 transition"
             style={{ background: currentTheme.gradient }}
           >
-            <Layers className="h-3.5 w-3.5" />
+            <Layers className="h-4 w-4" />
             <span>{t('calc.switch', 'Switch Calculator')}</span>
             <kbd className="hidden sm:inline rounded bg-black/20 px-1.5 py-0.5 font-mono text-[10px]">
               ⌘K
@@ -152,43 +164,76 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
 
           <button
             type="button"
-            onClick={() => setIsFocusMode(true)}
-            className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-300 hover:bg-emerald-500/20 whitespace-nowrap shrink-0 transition"
-            title="Open Single Calculator Focus Mode (Distraction-Free)"
+            onClick={onToggleFocusMode}
+            aria-pressed={isFocusMode}
+            className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold active:scale-95 whitespace-nowrap shrink-0 transition ${
+              isFocusMode
+                ? 'border-emerald-500 bg-emerald-500/20 text-emerald-700 dark:text-emerald-200'
+                : 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20'
+            }`}
+            title={isFocusMode ? 'Show full formula notes & related tools' : 'Center calculator & hide extra sections'}
           >
-            <Target className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Focus Mode</span>
+            {isFocusMode ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+            <span className="hidden sm:inline">
+              {isFocusMode ? 'Exit Focus' : t('calc.focusMode', 'Focus Mode')}
+            </span>
           </button>
 
-          <nav aria-label="Breadcrumb" className="hidden md:flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 ps-1">
+          <nav aria-label="Breadcrumb" className="hidden lg:flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 ps-1">
             <Link to={`/${activeLang}/${calculator.category}`} className="hover:underline truncate max-w-[140px]">
               {calculator.categoryLabel}
             </Link>
             <ChevronRight className="h-3.5 w-3.5 shrink-0" />
-            <span className="font-semibold text-slate-900 dark:text-slate-100 truncate max-w-[220px]">
+            <span className="font-semibold text-slate-900 dark:text-slate-100 truncate max-w-[200px]">
               {calculator.name}
             </span>
           </nav>
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
+          {/* Quick 50-Language Switcher inside Full-Screen Bar */}
+          <label className="hidden sm:inline-flex min-h-[44px] items-center gap-1 rounded-xl border border-slate-300/80 px-2.5 text-xs dark:border-slate-700">
+            <Globe className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+            <select
+              aria-label="Select interface language"
+              value={language}
+              onChange={(e) => handleLanguageChange(e.target.value)}
+              className="bg-transparent text-xs font-medium text-slate-700 focus:outline-none dark:text-slate-200 max-w-[92px]"
+            >
+              {SUPPORTED_LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code} className="bg-white dark:bg-slate-900">
+                  {l.nativeName}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <button
+            type="button"
+            onClick={() => applyThemePreset(isDark ? 'premium-light' : 'cosmic')}
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-slate-300/80 text-slate-600 hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 shrink-0 transition"
+            aria-label={isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+          >
+            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+
           {prevCalc && (
             <Link
               to={activeLang === 'en' ? `/calculators/${prevCalc.slug}/` : `/${activeLang}/${prevCalc.category}/${prevCalc.slug}`}
-              className="inline-flex min-h-[38px] items-center gap-1 rounded-xl border border-slate-300/80 px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
+              className="hidden md:inline-flex min-h-[44px] items-center gap-1 rounded-xl border border-slate-300/80 px-2.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
               title={`Previous: ${prevCalc.name}`}
             >
               <ChevronLeft className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">{t('calc.prevTool', 'Prev')}</span>
+              <span>{t('calc.prevTool', 'Prev')}</span>
             </Link>
           )}
           {nextCalc && (
             <Link
               to={activeLang === 'en' ? `/calculators/${nextCalc.slug}/` : `/${activeLang}/${nextCalc.category}/${nextCalc.slug}`}
-              className="inline-flex min-h-[38px] items-center gap-1 rounded-xl border border-slate-300/80 px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
+              className="hidden md:inline-flex min-h-[44px] items-center gap-1 rounded-xl border border-slate-300/80 px-2.5 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 whitespace-nowrap shrink-0"
               title={`Next: ${nextCalc.name}`}
             >
-              <span className="hidden sm:inline">{t('calc.nextTool', 'Next')}</span>
+              <span>{t('calc.nextTool', 'Next')}</span>
               <ChevronRight className="h-3.5 w-3.5" />
             </Link>
           )}
@@ -198,7 +243,7 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
             onClick={handleClose}
             aria-label={`Close ${calculator.name}`}
             title={`${t('calc.close', 'Close')} (${calculator.categoryLabel})`}
-            className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-1 rounded-xl border border-rose-500/35 bg-rose-500/10 px-2.5 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-500/20 dark:text-rose-300 whitespace-nowrap shrink-0 transition"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-xl border border-rose-500/35 bg-rose-500/10 px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-500/20 active:scale-95 dark:text-rose-300 whitespace-nowrap shrink-0 transition"
           >
             <X className="h-4 w-4" />
             <span className="hidden sm:inline">{t('calc.close', 'Close')}</span>
@@ -219,7 +264,6 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
             onClick={() => setDrawerOpen(false)}
           />
           <div className="liquid-glass relative z-10 flex h-full w-full max-w-xl flex-col border-s border-slate-200/70 bg-white/95 p-5 shadow-2xl dark:border-slate-800 dark:bg-slate-950/95">
-            {/* Drawer Header with Close X */}
             <div className="flex items-center justify-between gap-3 border-b border-slate-200/70 pb-3 dark:border-slate-800">
               <div>
                 <h2 className="font-display text-lg font-bold">
@@ -233,13 +277,12 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
                 type="button"
                 onClick={() => setDrawerOpen(false)}
                 aria-label="Close switcher"
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            {/* Instant Search Bar inside Drawer */}
             <div className="mt-4 relative">
               <Search className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
@@ -262,12 +305,11 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
               )}
             </div>
 
-            {/* Category Quick Tabs */}
             <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1.5">
               <button
                 type="button"
                 onClick={() => setDrawerCategory('all')}
-                className={`rounded-lg px-2.5 py-1 text-xs font-medium whitespace-nowrap shrink-0 transition ${
+                className={`min-h-[36px] rounded-lg px-3 py-1 text-xs font-medium whitespace-nowrap shrink-0 transition ${
                   drawerCategory === 'all'
                     ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
                     : 'border border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'
@@ -283,7 +325,7 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
                     key={cat.id}
                     type="button"
                     onClick={() => setDrawerCategory(cat.id)}
-                    className={`rounded-lg px-2.5 py-1 text-xs font-medium whitespace-nowrap shrink-0 transition ${
+                    className={`min-h-[36px] rounded-lg px-3 py-1 text-xs font-medium whitespace-nowrap shrink-0 transition ${
                       active
                         ? 'text-white'
                         : 'border border-slate-200 text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'
@@ -296,7 +338,6 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
               })}
             </div>
 
-            {/* Scrollable Calculator List */}
             <div className="mt-3 flex-1 space-y-1.5 overflow-y-auto pe-1">
               {drawerResults.length === 0 ? (
                 <div className="py-12 text-center text-sm text-slate-500">
@@ -314,7 +355,7 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
                         setDrawerOpen(false);
                         navigate(activeLang === 'en' ? `/calculators/${item.slug}/` : `/${activeLang}/${item.category}/${item.slug}`);
                       }}
-                      className={`flex w-full items-center justify-between gap-3 rounded-xl border p-3 text-start transition ${
+                      className={`flex min-h-[48px] w-full items-center justify-between gap-3 rounded-xl border p-3 text-start transition ${
                         isCurrent
                           ? 'border-blue-500 bg-blue-500/10'
                           : 'border-slate-200/70 hover:bg-slate-100/80 dark:border-slate-800 dark:hover:bg-slate-800/70'
@@ -322,7 +363,7 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
                     >
                       <div className="flex min-w-0 items-center gap-3">
                         <span
-                          className="flex h-8 w-12 shrink-0 items-center justify-center rounded-lg font-mono text-[11px] font-bold text-white"
+                          className="flex h-8 w-14 shrink-0 items-center justify-center rounded-lg font-mono text-[11px] font-bold text-white"
                           style={{ background: theme.gradient }}
                         >
                           #{item.catalogNumber}
@@ -359,54 +400,6 @@ export const QuickCalculatorBar: React.FC<QuickCalculatorBarProps> = ({
                 <Calculator className="h-3.5 w-3.5" />
                 Full Directory
               </Link>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Single Calculator Focus Mode / Distraction-Free Theater Overlay */}
-      {isFocusMode && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/85 backdrop-blur-md overflow-y-auto"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Single Calculator Focus Mode"
-        >
-          <div className="relative w-full max-w-3xl rounded-3xl border border-slate-700/80 bg-slate-900/95 p-6 sm:p-8 shadow-2xl text-slate-100 space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div>
-                <div className="flex items-center gap-2 text-xs text-emerald-400 font-mono">
-                  <Target className="h-4 w-4" />
-                  <span>SINGLE CALCULATOR FOCUS MODE — ACTIVE</span>
-                </div>
-                <h2 className="mt-1 font-display text-2xl font-bold tracking-tight text-white">
-                  {calculator.name}
-                </h2>
-                <p className="text-xs text-slate-400">{calculator.categoryLabel} · {calculator.subcategory}</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsFocusMode(false)}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-xs font-bold text-rose-300 hover:bg-rose-500/20 transition"
-              >
-                <X className="h-4 w-4" />
-                <span>Exit Focus Mode</span>
-              </button>
-            </div>
-
-            <div className="rounded-2xl bg-slate-950/80 p-5 border border-slate-800 text-center space-y-3">
-              <p className="text-sm text-slate-300">
-                You are in Distraction-Free Focus Mode. All listings, sidebars, and extra headers are hidden. Use the inputs below or click <strong>Exit Focus Mode</strong> to return to the studio workspace.
-              </p>
-              <div className="pt-2 flex justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsFocusMode(false)}
-                  className="btn-3d rounded-xl px-5 py-2.5 text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600"
-                >
-                  Continue Calculating Here
-                </button>
-              </div>
             </div>
           </div>
         </div>

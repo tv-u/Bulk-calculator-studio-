@@ -59,13 +59,15 @@ export const HomePage: React.FC = () => {
         hreflangPath=""
       />
 
-      {/* Hero Command Center with Instant 2,500-Calculator Smart Search */}
+      {/* Hero Command Center with Instant 5,729-Calculator Smart Search */}
       <CosmicEntrance>
         <AuroraFlow className="liquid-glass card-3d p-6 sm:p-10">
           <div className="mx-auto max-w-3xl text-center">
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-300">
               <Globe className="h-3.5 w-3.5" />
-              <span>{t('hero.badge', `${published.length.toLocaleString()} Verified Calculators · 50 Languages`)}</span>
+              <span>
+                {published.length.toLocaleString()} {t('hero.verifiedCountLabel', 'Verified Calculators')} · 50 {t('hero.languagesLabel', 'Languages')}
+              </span>
             </div>
             <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl text-balance">
               BULK CALCULATOR STUDIO
@@ -83,13 +85,13 @@ export const HomePage: React.FC = () => {
 
             <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
               <Link to={`/${language}/finance`}>
-                <MagneticButton variant="primary" className="btn-3d">
+                <MagneticButton variant="primary" className="btn-3d min-h-[44px]">
                   <Calculator className="h-4 w-4" />
                   {t('hero.exploreAll', `Explore ${published.length.toLocaleString()} Calculators`)}
                 </MagneticButton>
               </Link>
               <Link to="/bulk-calculator">
-                <MagneticButton variant="secondary">
+                <MagneticButton variant="secondary" className="min-h-[44px]">
                   <FileSpreadsheet className="h-4 w-4" />
                   {t('hero.openBulk', 'Open Bulk Studio')}
                 </MagneticButton>

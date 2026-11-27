@@ -22,17 +22,17 @@ const COPY_BY_PLACEMENT: Record<
 > = {
   headerBanner: {
     heading: 'Featured Partner Offer',
-    body: 'Keep 2,600+ deterministic calculators 100% free via our verified Monetag partner spotlight.',
+    body: 'Keep 5,729+ deterministic calculators 100% free via our verified Monetag partner spotlight.',
     cta: 'Explore Partner',
   },
   homeSponsoredCard: {
     heading: 'Featured Partner Offer',
-    body: 'Explore curated tools and partner offers while keeping all 2,600 calculators free.',
+    body: 'Explore curated tools and partner offers while keeping all 5,729 calculators free.',
     cta: 'View Partner Offer',
   },
   resultPromoCta: {
     heading: 'Partner Resource',
-    body: 'Support free precision computation across 2,600 calculators, PDF exports & Bulk Studio.',
+    body: 'Support free precision computation across 5,729 calculators, PDF exports & Bulk Studio.',
     cta: 'Open Sponsored Link',
   },
   dashboardBanner: {

@@ -1,355 +1,355 @@
 {
-  "generatedAt": "2026-11-24T11:47:49.815Z",
+  "generatedAt": "2026-11-27T14:37:59.087Z",
   "languages": [
     {
       "code": "en",
-      "totalKeys": 42,
-      "localizedKeys": 42,
+      "totalKeys": 45,
+      "localizedKeys": 45,
       "fallbackEnglishKeys": 0,
       "coveragePct": 100
     },
     {
       "code": "hi",
-      "totalKeys": 42,
-      "localizedKeys": 40,
+      "totalKeys": 45,
+      "localizedKeys": 43,
       "fallbackEnglishKeys": 2,
-      "coveragePct": 95.2
+      "coveragePct": 95.6
     },
     {
       "code": "bn",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 16,
-      "fallbackEnglishKeys": 26,
-      "coveragePct": 38.1
+      "fallbackEnglishKeys": 29,
+      "coveragePct": 35.6
     },
     {
       "code": "te",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 12,
-      "fallbackEnglishKeys": 30,
-      "coveragePct": 28.6
+      "fallbackEnglishKeys": 33,
+      "coveragePct": 26.7
     },
     {
       "code": "mr",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 12,
-      "fallbackEnglishKeys": 30,
-      "coveragePct": 28.6
+      "fallbackEnglishKeys": 33,
+      "coveragePct": 26.7
     },
     {
       "code": "ta",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 13,
-      "fallbackEnglishKeys": 29,
-      "coveragePct": 31
+      "fallbackEnglishKeys": 32,
+      "coveragePct": 28.9
     },
     {
       "code": "ur",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 31,
-      "fallbackEnglishKeys": 11,
-      "coveragePct": 73.8
+      "fallbackEnglishKeys": 14,
+      "coveragePct": 68.9
     },
     {
       "code": "gu",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 12,
-      "fallbackEnglishKeys": 30,
-      "coveragePct": 28.6
+      "fallbackEnglishKeys": 33,
+      "coveragePct": 26.7
     },
     {
       "code": "kn",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 11,
-      "fallbackEnglishKeys": 31,
-      "coveragePct": 26.2
+      "fallbackEnglishKeys": 34,
+      "coveragePct": 24.4
     },
     {
       "code": "ml",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 11,
-      "fallbackEnglishKeys": 31,
-      "coveragePct": 26.2
+      "fallbackEnglishKeys": 34,
+      "coveragePct": 24.4
     },
     {
       "code": "pa",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 11,
-      "fallbackEnglishKeys": 31,
-      "coveragePct": 26.2
+      "fallbackEnglishKeys": 34,
+      "coveragePct": 24.4
     },
     {
       "code": "or",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "as",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "ne",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 10,
-      "fallbackEnglishKeys": 32,
-      "coveragePct": 23.8
+      "fallbackEnglishKeys": 35,
+      "coveragePct": 22.2
     },
     {
       "code": "si",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "zh-CN",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 17,
-      "fallbackEnglishKeys": 25,
-      "coveragePct": 40.5
+      "fallbackEnglishKeys": 28,
+      "coveragePct": 37.8
     },
     {
       "code": "zh-TW",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 14,
-      "fallbackEnglishKeys": 28,
-      "coveragePct": 33.3
+      "fallbackEnglishKeys": 31,
+      "coveragePct": 31.1
     },
     {
       "code": "ja",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 15,
-      "fallbackEnglishKeys": 27,
-      "coveragePct": 35.7
-    },
-    {
-      "code": "ko",
-      "totalKeys": 42,
-      "localizedKeys": 14,
-      "fallbackEnglishKeys": 28,
+      "fallbackEnglishKeys": 30,
       "coveragePct": 33.3
     },
     {
-      "code": "vi",
-      "totalKeys": 42,
-      "localizedKeys": 11,
+      "code": "ko",
+      "totalKeys": 45,
+      "localizedKeys": 14,
       "fallbackEnglishKeys": 31,
-      "coveragePct": 26.2
+      "coveragePct": 31.1
+    },
+    {
+      "code": "vi",
+      "totalKeys": 45,
+      "localizedKeys": 11,
+      "fallbackEnglishKeys": 34,
+      "coveragePct": 24.4
     },
     {
       "code": "th",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 11,
-      "fallbackEnglishKeys": 31,
-      "coveragePct": 26.2
+      "fallbackEnglishKeys": 34,
+      "coveragePct": 24.4
     },
     {
       "code": "id",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 12,
-      "fallbackEnglishKeys": 30,
-      "coveragePct": 28.6
+      "fallbackEnglishKeys": 33,
+      "coveragePct": 26.7
     },
     {
       "code": "ms",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 10,
-      "fallbackEnglishKeys": 32,
-      "coveragePct": 23.8
+      "fallbackEnglishKeys": 35,
+      "coveragePct": 22.2
     },
     {
       "code": "fil",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 10,
-      "fallbackEnglishKeys": 32,
-      "coveragePct": 23.8
+      "fallbackEnglishKeys": 35,
+      "coveragePct": 22.2
     },
     {
       "code": "ar",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 32,
-      "fallbackEnglishKeys": 10,
-      "coveragePct": 76.2
+      "fallbackEnglishKeys": 13,
+      "coveragePct": 71.1
     },
     {
       "code": "fa",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 19,
-      "fallbackEnglishKeys": 23,
-      "coveragePct": 45.2
+      "fallbackEnglishKeys": 26,
+      "coveragePct": 42.2
     },
     {
       "code": "he",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 19,
-      "fallbackEnglishKeys": 23,
-      "coveragePct": 45.2
+      "fallbackEnglishKeys": 26,
+      "coveragePct": 42.2
     },
     {
       "code": "tr",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 12,
-      "fallbackEnglishKeys": 30,
-      "coveragePct": 28.6
+      "fallbackEnglishKeys": 33,
+      "coveragePct": 26.7
     },
     {
       "code": "es",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 30,
-      "fallbackEnglishKeys": 12,
-      "coveragePct": 71.4
+      "fallbackEnglishKeys": 15,
+      "coveragePct": 66.7
     },
     {
       "code": "fr",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 22,
-      "fallbackEnglishKeys": 20,
-      "coveragePct": 52.4
+      "fallbackEnglishKeys": 23,
+      "coveragePct": 48.9
     },
     {
       "code": "de",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 21,
-      "fallbackEnglishKeys": 21,
-      "coveragePct": 50
+      "fallbackEnglishKeys": 24,
+      "coveragePct": 46.7
     },
     {
       "code": "pt",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 12,
-      "fallbackEnglishKeys": 30,
-      "coveragePct": 28.6
+      "fallbackEnglishKeys": 33,
+      "coveragePct": 26.7
     },
     {
       "code": "it",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 11,
-      "fallbackEnglishKeys": 31,
-      "coveragePct": 26.2
+      "fallbackEnglishKeys": 34,
+      "coveragePct": 24.4
     },
     {
       "code": "nl",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 11,
-      "fallbackEnglishKeys": 31,
-      "coveragePct": 26.2
+      "fallbackEnglishKeys": 34,
+      "coveragePct": 24.4
     },
     {
       "code": "pl",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 11,
-      "fallbackEnglishKeys": 31,
-      "coveragePct": 26.2
+      "fallbackEnglishKeys": 34,
+      "coveragePct": 24.4
     },
     {
       "code": "ru",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 12,
-      "fallbackEnglishKeys": 30,
-      "coveragePct": 28.6
+      "fallbackEnglishKeys": 33,
+      "coveragePct": 26.7
     },
     {
       "code": "uk",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 11,
-      "fallbackEnglishKeys": 31,
-      "coveragePct": 26.2
+      "fallbackEnglishKeys": 34,
+      "coveragePct": 24.4
     },
     {
       "code": "sv",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "no",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "da",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "fi",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "el",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "cs",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "ro",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "hu",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "bg",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "sr",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "hr",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "sk",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 9,
-      "fallbackEnglishKeys": 33,
-      "coveragePct": 21.4
+      "fallbackEnglishKeys": 36,
+      "coveragePct": 20
     },
     {
       "code": "sw",
-      "totalKeys": 42,
+      "totalKeys": 45,
       "localizedKeys": 10,
-      "fallbackEnglishKeys": 32,
-      "coveragePct": 23.8
+      "fallbackEnglishKeys": 35,
+      "coveragePct": 22.2
     }
   ]
 }

@@ -11,8 +11,8 @@ if (!fs.existsSync(catalogFile)) throw Error('Catalog missing: run generate-cata
 if (!fs.existsSync(indexFile)) throw Error('Vite dist/index.html missing: run vite build first');
 
 const catalog = JSON.parse(fs.readFileSync(catalogFile, 'utf8'));
-if (!Array.isArray(catalog) || catalog.length !== 2600) {
-  throw Error(`Catalog must contain exactly 2600 calculators, found ${catalog?.length}`);
+if (!Array.isArray(catalog) || catalog.length < 5700) {
+  throw Error(`Catalog must contain 5,700+ calculators, found ${catalog?.length}`);
 }
 
 const esc = (v) =>
@@ -39,7 +39,7 @@ for (const item of catalog) {
   entries.push(item);
 }
 
-if (entries.length !== 2600) throw Error('Not all 2600 calculators are publishable');
+if (entries.length !== catalog.length) throw Error(`Not all ${catalog.length} calculators are publishable`);
 
 const original = fs.readFileSync(indexFile, 'utf8');
 if (!/<div\b[^>]*\bid=["']root["'][^>]*>/i.test(original)) {
@@ -87,9 +87,9 @@ ${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : ''}
 const staticPages = [
   {
     route: '/calculators/',
-    title: 'All 2,600 Free Online Calculators | BulkCalc',
-    description: 'Browse 2,600 verified online calculators across Finance, Math, Health, Engineering, Construction, Science, Business & Technology.',
-    keywords: 'free online calculator directory, 2600 calculators, finance math health engineering calculators',
+    title: `All ${entries.length.toLocaleString()} Free Online Calculators | BulkCalc`,
+    description: `Browse ${entries.length.toLocaleString()} verified online calculators across Finance, Math, Health, Engineering, Construction, Science, Business & Technology.`,
+    keywords: `free online calculator directory, ${entries.length} calculators, finance math health engineering calculators`,
   },
   {
     route: '/categories/',
@@ -148,13 +148,13 @@ const staticPages = [
   {
     route: '/formula-library/',
     title: 'Verified Mathematical & Financial Formula Library | BulkCalc',
-    description: 'Browse documented mathematical, financial, clinical, physics, and engineering equations powering 2,600 calculators.',
+    description: `Browse documented mathematical, financial, clinical, physics, and engineering equations powering ${entries.length.toLocaleString()} calculators.`,
     keywords: 'math finance engineering formula reference library',
   },
   {
     route: '/about/',
     title: 'About BULK CALCULATOR STUDIO | BulkCalc',
-    description: 'Learn about our deterministic calculation accuracy standards, privacy-first local execution, and 2,600-tool platform.',
+    description: `Learn about our deterministic calculation accuracy standards, privacy-first local execution, and ${entries.length.toLocaleString()}-tool platform.`,
     keywords: 'about bulk calculator studio, deterministic calculator engine',
   },
   {

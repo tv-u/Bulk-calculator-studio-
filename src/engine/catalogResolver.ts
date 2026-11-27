@@ -443,15 +443,34 @@ export function resolveCatalogEntryMeta(slugOrId: string): CatalogEntryMeta | un
   return undefined;
 }
 
+const CATALOG_BY_SUBCATEGORY = new Map<string, CatalogEntryMeta[]>();
+const CATALOG_BY_CATEGORY = new Map<string, CatalogEntryMeta[]>();
+for (const entry of CATALOG_2500) {
+  const subArr = CATALOG_BY_SUBCATEGORY.get(entry.subcategory) || [];
+  subArr.push(entry);
+  CATALOG_BY_SUBCATEGORY.set(entry.subcategory, subArr);
+  const catArr = CATALOG_BY_CATEGORY.get(entry.category) || [];
+  catArr.push(entry);
+  CATALOG_BY_CATEGORY.set(entry.category, catArr);
+}
+
 export function getRelatedCatalogSlugs(entry: CatalogEntryMeta, count = 4): string[] {
-  const siblings = CATALOG_2500.filter(
-    (c) => c.slug !== entry.slug && (c.subcategory === entry.subcategory || c.category === entry.category)
-  );
-  const sorted = [
-    ...siblings.filter((c) => c.subcategory === entry.subcategory),
-    ...siblings.filter((c) => c.subcategory !== entry.subcategory),
-  ];
-  return sorted.slice(0, count).map((c) => c.slug);
+  const out: string[] = [];
+  const subSiblings = CATALOG_BY_SUBCATEGORY.get(entry.subcategory) || [];
+  for (const c of subSiblings) {
+    if (c.slug !== entry.slug) {
+      out.push(c.slug);
+      if (out.length >= count) return out;
+    }
+  }
+  const catSiblings = CATALOG_BY_CATEGORY.get(entry.category) || [];
+  for (const c of catSiblings) {
+    if (c.slug !== entry.slug && !out.includes(c.slug)) {
+      out.push(c.slug);
+      if (out.length >= count) return out;
+    }
+  }
+  return out;
 }
 
 export async function resolveCalculatorBySlugAsync(slugOrId: string): Promise<CalculatorDefinition | undefined> {
@@ -469,6 +488,22 @@ export async function resolveCalculatorBySlugAsync(slugOrId: string): Promise<Ca
     }
     case 'unit':
       return buildUnitVariantDefinition(entry);
+    case 'extUnit': {
+      const mod = await import('./solvers/extendedUnitSolver');
+      return attachCatalogMeta(mod.buildExtendedUnitDefinition(entry), entry);
+    }
+    case 'extFinance': {
+      const mod = await import('./solvers/extendedFinanceTaxSolver');
+      return attachCatalogMeta(mod.buildExtendedFinanceDefinition(entry), entry);
+    }
+    case 'extMathSci': {
+      const mod = await import('./solvers/extendedMathScienceSolver');
+      return attachCatalogMeta(mod.buildExtendedMathScienceDefinition(entry), entry);
+    }
+    case 'extApplied': {
+      const mod = await import('./solvers/extendedAppliedToolsSolver');
+      return attachCatalogMeta(mod.buildExtendedAppliedDefinition(entry), entry);
+    }
     case 'finance': {
       const mod = await import('./solvers/financeSolver');
       return attachCatalogMeta(mod.buildFinanceDefinition(entry), entry);

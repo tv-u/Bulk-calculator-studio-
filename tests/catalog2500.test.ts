@@ -2,19 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { CATALOG_2500, resolveCalculatorSync } from '../src/engine/catalogResolverSync';
 import { buildCalculatorSeoMeta } from '../src/engine/seoMeta';
 
-describe('Master 2,600 Calculator Verification Suite', () => {
-  it('contains exact 2,600 entries with unique numbers 1..2600 and unique slugs', () => {
-    expect(CATALOG_2500.length).toBe(2600);
+describe('Master 5,729 Calculator Verification Suite', () => {
+  it('contains 5,729 entries with unique sequential numbers 1..5729 and unique slugs', () => {
+    expect(CATALOG_2500.length).toBe(5729);
     const nums = new Set(CATALOG_2500.map((c) => c.catalogNumber));
     const slugs = new Set(CATALOG_2500.map((c) => c.slug));
-    expect(nums.size).toBe(2600);
-    expect(slugs.size).toBe(2600);
+    expect(nums.size).toBe(5729);
+    expect(slugs.size).toBe(5729);
     expect(CATALOG_2500[0].catalogNumber).toBe(1);
     expect(CATALOG_2500[2499].catalogNumber).toBe(2500);
     expect(CATALOG_2500[2599].catalogNumber).toBe(2600);
+    expect(CATALOG_2500[5728].catalogNumber).toBe(5729);
   });
 
-  it('resolves and computes valid non-NaN deterministic results for ALL 2,600 calculators', () => {
+  it('resolves and computes valid non-NaN deterministic results for ALL 5,729 calculators', () => {
     const failures: Array<{ num: number; slug: string; err: string }> = [];
 
     for (const entry of CATALOG_2500) {
@@ -72,6 +73,53 @@ describe('Master 2,600 Calculator Verification Suite', () => {
     expect(nrr).toBeDefined();
     const nrrRes = nrr!.compute({ runsFor: 300, oversFaced: 50, runsAgainst: 250, oversBowled: 50 });
     expect(Number(nrrRes.primary.value)).toBeCloseTo(1.0, 2);
+  });
+
+  it('accurately computes extended #2601-#5729 tools across finance, electronics, solids, construction, sports & dev', () => {
+    const alPay = resolveCalculatorSync('alabama-paycheck-calculator');
+    expect(alPay).toBeDefined();
+    expect(Number(alPay!.compute({ gross: 80000, freq: 26, filing: 'single' }).primary.value)).toBeGreaterThan(1500);
+
+    const altman = resolveCalculatorSync('altman-z-score-calculator');
+    expect(altman).toBeDefined();
+    const az = altman!.compute({ wcTa: 0.25, reTa: 0.4, ebitTa: 0.18, mveTl: 2.4, sTa: 1.5 });
+    expect(Number(az.primary.value)).toBeCloseTo(4.394, 2);
+
+    const graham = resolveCalculatorSync('graham-number-calculator');
+    expect(graham).toBeDefined();
+    expect(Number(graham!.compute({ eps: 8, bvps: 25 }).primary.value)).toBeCloseTo(Math.sqrt(22.5 * 8 * 25), 2);
+
+    const lm317 = resolveCalculatorSync('lm317-calculator');
+    expect(lm317).toBeDefined();
+    expect(Number(lm317!.compute({ r1: 240, r2: 1200 }).primary.value)).toBeCloseTo(7.56, 2);
+
+    const ne555 = resolveCalculatorSync('ne555-astable-calculator');
+    expect(ne555).toBeDefined();
+    expect(Number(ne555!.compute({ r1: 1000, r2: 10000, cUf: 10 }).primary.value)).toBeGreaterThan(5);
+
+    const torus = resolveCalculatorSync('torus-volume-calculator');
+    expect(torus).toBeDefined();
+    expect(Number(torus!.compute({ majorR: 10, minorR: 3 }).primary.value)).toBeCloseTo(2 * Math.PI ** 2 * 10 * 9, 1);
+
+    const ada = resolveCalculatorSync('ada-ramp-calculator');
+    expect(ada).toBeDefined();
+    expect(Number(ada!.compute({ riseIn: 24, slopeDenom: 12 }).primary.value)).toBeCloseTo(24, 1);
+
+    const nfl = resolveCalculatorSync('nfl-passer-rating-calculator');
+    expect(nfl).toBeDefined();
+    expect(Number(nfl!.compute({ cmp: 24, att: 32, yds: 310, td: 3, int: 0 }).primary.value)).toBeGreaterThan(120);
+
+    const chmod = resolveCalculatorSync('chmod-calculator');
+    expect(chmod).toBeDefined();
+    expect(chmod!.compute({ owner: 7, group: 5, other: 5 }).primary.formatted).toContain('755');
+
+    const luhn = resolveCalculatorSync('luhn-calculator');
+    expect(luhn).toBeDefined();
+    expect(luhn!.compute({ number: '79927398713' }).primary.formatted).toContain('VALID');
+
+    const cuYdTons = resolveCalculatorSync('cubic-yards-to-tons-calculator');
+    expect(cuYdTons).toBeDefined();
+    expect(Number(cuYdTons!.compute({ val: 10, mat: 'gravel' }).primary.value)).toBeCloseTo(13.484, 2);
   });
 
   it('accurately computes supplemental #2501-#2600 tools (Quadratic, Roman, BigInt, BAC, Embed Widgets)', () => {
